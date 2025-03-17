@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'accounts',
     'store',
     'carts',
+    'greatkart',
 ]
 
 MIDDLEWARE = [
@@ -136,3 +137,34 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR:'danger',
+}
+
+
+#SMTP CONFIGURATION
+# EMAIL_HOST ='smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'sagar@prixa.org'
+# EMAIL_HOST_PASSWORD = 'prixasagar10'
+# EMAIL_USE_SSL = False
+# EMAIL_USE_TLS = True
+
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = "smtp.gmail.com"
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = "sagar@prixa.org"  # Your email
+# EMAIL_HOST_PASSWORD = "bfpy hztk pvvf jjwr"  # App password or SMTP password
+# EMAIL_USE_TLS = True
+# EMAIL_USE_SSL = False
+# EMAIL_TIMEOUT = None
+# EMAIL_SSL_CERTFILE = None
+# EMAIL_SSL_KEYFILE = None
+
+EMAIL_BACKEND = "greatkart.utils.custom_email_backend.CustomEmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "sagar@prixa.org"
+EMAIL_HOST_PASSWORD = "bfpy hztk pvvf jjwr"
