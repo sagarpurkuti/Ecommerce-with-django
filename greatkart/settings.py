@@ -144,6 +144,7 @@ MESSAGE_TAGS = {
 
 
 #SMTP CONFIGURATION
+
 # EMAIL_HOST ='smtp.gmail.com'
 # EMAIL_PORT = 587
 # EMAIL_HOST_USER = 'sagar@prixa.org'
@@ -162,9 +163,8 @@ MESSAGE_TAGS = {
 # EMAIL_SSL_CERTFILE = None
 # EMAIL_SSL_KEYFILE = None
 
-EMAIL_BACKEND = "greatkart.utils.custom_email_backend.CustomEmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "sagar@prixa.org"
+EMAIL_HOST          = "smtp.gmail.com"
+EMAIL_PORT          = 587
+EMAIL_HOST_USER     = "sagar@prixa.org"
 EMAIL_HOST_PASSWORD = "bfpy hztk pvvf jjwr"
+EMAIL_USE_TLS     = True

@@ -39,17 +39,18 @@ def register(request):
             current_site = get_current_site(request)
             mail_subject = 'please activate your account'
             message      = render_to_string('accounts/account_verification_email.html',{
-                'user' : user,
+                'user'   : user,
                 'domain' : current_site,
-                'uid' : urlsafe_base64_encode(force_bytes(user.pk)),
-                'token' : default_token_generator.make_token(user),
+                'uid'    : urlsafe_base64_encode(force_bytes(user.pk)),
+                'token'  : default_token_generator.make_token(user),
             })
-            to_email = email
-            send_email = EmailMessage(mail_subject, message, to=[to_email])
+            to_email    = email
+            send_email  = EmailMessage(mail_subject, message, to=[to_email])
             send_email.send()
 
-            messages.success(request, 'Registration Successsful. Check your Email for Verification.')
-            return redirect('register')
+            # messages.success(request, 'Thank you for registering with us. We have sent you a verification email to your email address. Please Verify it.')
+
+            return redirect('/accounts/login/?command=verification&email='+email)
     else:        
         form = RegistrationForm()
     context = {
@@ -80,5 +81,25 @@ def logout(request):
     messages.success(request, "you are logged out.")
     return redirect('login')
     
-def activate(request):
-    return HttpResponse("OK")
+def activate(request, uidb64, token):
+
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = Account._default_manager.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, Account.DoesNotExist):
+        user = None
+    
+    if user is not None and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        messages.success(request, "Congratulations your account if activated.")
+        return redirect('login')
+    else:
+        messages.error(request, 'invalide activation link')
+        return redirect('register')
+
+    # return HttpResponse("OK")
+
+@login_required(login_url='login')
+def dashboard(request):
+    return render(request, 'accounts/dashboard.html')
