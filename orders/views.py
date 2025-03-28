@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
 # from django.http import HttpResponse
 from carts.models import CartItem
-from .forms import OrderForm, Order
+from .forms import OrderForm
+from .models import Order
+from store.models import Product
 import datetime
 # Create your views here.
 
 
-def place_order(request,total=0, quantity=0):
+def place_order(request,total=0, quantity=0,):
     current_user  = request.user
     # if the cart count is less than or equal to then redirect back to shop
 
@@ -30,6 +32,7 @@ def place_order(request,total=0, quantity=0):
         if form.is_valid():
             #store all the billing informaion inside order table
             data            = Order()
+            data.user       = current_user
             data.first_name = form.cleaned_data['first_name']
             data.last_name  = form.cleaned_data['last_name']
             data.phone      = form.cleaned_data['phone']
@@ -45,14 +48,15 @@ def place_order(request,total=0, quantity=0):
             data.ip         = request.META.get('REMOTE_ADDR')
             data.save()
             # Generate Order Number
-            yr = int(datetime.date.today().strftime('%y'))
+            yr = int(datetime.date.today().strftime('%Y'))  # ✅ Gives full year (e.g., 2025)
             dt = int(datetime.date.today().strftime('%d'))
             mt = int(datetime.date.today().strftime('%m'))
             d  = datetime.date(yr, mt, dt)
-            current_date = d.strftime("%y%m%d")
+            current_date = d.strftime("%Y%m%d")
             order_number    = current_date + str(data.id)
             data.order_nummber = order_number
             data.save()
+
             return redirect ('checkout')
     else:
         return redirect('checkout')
