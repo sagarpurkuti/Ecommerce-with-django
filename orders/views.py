@@ -1,11 +1,87 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 # from django.http import HttpResponse
-from carts.models import CartItem
+from carts.models import CartItem, Cart
 from .forms import OrderForm
-from .models import Order
+from .models import Order, Payment
 from store.models import Product
 import datetime
-# Create your views here.
+import json
+import requests
+
+#youtube reference
+from django.views import View
+import hmac
+import hashlib
+import uuid
+import base64
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+from django.http import JsonResponse
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
+
+
+
+
+  
+
+
+def payment_success(request):
+    transaction_uuid = request.GET.get('transaction_uuid')
+    total_amount = request.GET.get('total_amount')
+    status = request.GET.get('status')
+    signature = request.GET.get('signature')
+
+    if not all([transaction_uuid, total_amount, status, signature]):
+        return redirect('payment_failure')
+
+    # Verify signature (recommended)
+    # if not verify_esewa_signature(...):
+    #     return redirect('payment_failure')
+
+    if status.upper() in ["COMPLETE", "SUCCESS"]:
+        try:
+            with transaction.atomic():
+                # Save payment
+                payment = Payment.objects.create(
+                    user=request.user,
+                    payment_id=transaction_uuid,
+                    payment_method="eSewa",
+                    amount_paid=total_amount,
+                    status="Completed"
+                )
+
+                # Update order
+                order = Order.objects.get(user=request.user, is_ordered=False)
+                order.payment = payment
+                order.is_ordered = True
+                order.status = 'Completed'
+                order.save()
+
+                # Clear cart
+                CartItem.objects.filter(user=request.user).delete()
+
+                return render(request, 'orders/payment_success.html')
+
+        except ObjectDoesNotExist:
+            return redirect('payment_failure')
+    
+    return redirect('payment_failure')
+
+def payment_failure(request):
+    # You might want to log failed attempts here
+    return render(request, 'orders/payment_failure.html')
+
+def gensignature(data_to_sign):
+   
+    SECRET_KEY = '8gBm/:&EnhH.1/q'
+    key = SECRET_KEY.encode("utf-8")
+    message = data_to_sign.encode("utf-8")
+    hmac_sha256 = hmac.new(key, message, hashlib.sha256)
+    digest = hmac_sha256.digest()
+    signature = base64.b64encode(digest).decode("utf-8")
+    
+    return signature
 
 
 def place_order(request,total=0, quantity=0,):
@@ -54,9 +130,46 @@ def place_order(request,total=0, quantity=0,):
             d  = datetime.date(yr, mt, dt)
             current_date = d.strftime("%Y%m%d")
             order_number    = current_date + str(data.id)
-            data.order_nummber = order_number
+            data.order_number = order_number
             data.save()
 
-            return redirect ('checkout')
+            order = Order.objects.get(user=current_user, is_ordered=False, order_number=order_number)
+
+            uuid_val = uuid.uuid4()
+
+            secret_key = '8gBm/:&EnhH.1/q'
+            # data_to_sign = f"{grand_total}, {uuid_val}, EPAYTEST"
+            total_amount = order.order_total
+            transaction_uuid = str(uuid_val)
+            product_code = 'EPAYTEST'
+            # data_to_sign=f"{total_amount},{transaction_uuid},{product_code}"
+            data_to_sign = f"total_amount={total_amount},transaction_uuid={transaction_uuid},product_code={product_code}"
+
+
+            # data_to_sign = f"total_amount={order.order_total}, transaction_uuid={uuid_val}, product_code=EPAYTEST"
+            # data_to_sign = f"{order.order_total},{uuid_val},EPAYTEST"  # Comma-separated without parameter names
+
+            result = gensignature(data_to_sign)
+
+            data = {
+            'total_amount': order.order_total,
+            'transaction_uuid': str(uuid_val),
+            'product_code': 'EPAYTEST',
+            'signature': result,
+            }
+
+            context ={
+                'order':order,
+                'cart_items': cart_items,
+                'total':total,
+                'tax':tax,
+                'grand_total':grand_total,
+                'data':data,
+            }
+
+            return render (request, 'orders/payments.html', context)
     else:
         return redirect('checkout')
+
+
+
