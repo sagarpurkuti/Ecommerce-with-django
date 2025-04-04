@@ -9,8 +9,8 @@ urlpatterns = [
 
 
     #for esewa
-    path('orders/payment-success/', views.payment_success, name='payment-success'),
-    path('orders/payment-failure/', views.payment_failure, name='payment-failure'),
+    path('orders/payment-success/', views.payment_success, name='payment_success'),
+    path('orders/payment-failure/', views.payment_failure, name='payment_failure'),
     
 ]
 

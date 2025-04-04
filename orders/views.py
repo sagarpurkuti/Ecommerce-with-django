@@ -25,20 +25,103 @@ from django.db import transaction
 
   
 
+from django.contrib import messages, auth
+
+# def payment_success(request):
+        
+#     data = request.GET.get('data')
+#     decoded_data_str = base64.b64decode(data).decode("utf-8")  # Decode to string first
+#     decoded_data = json.loads(decoded_data_str)  # Then load to dict
+#     product_code = 'EPAYTEST'
+    
+#     data_to_sign = f"transaction_code={decoded_data['transaction_code']},status={decoded_data['status']},total_amount={str(decoded_data['total_amount']).replace(',','')},transaction_uuid={decoded_data['transaction_uuid']},product_code={product_code},signed_field_names=transaction_code,status,total_amount,transaction_uuid,product_code,signed_field_names"
+#     signature = gensignature(data_to_sign)
+    
+    
+#     if str(decoded_data['signature']) == signature:
+#         messages.success(request,"Payment successful")
+
+
+
+#     transaction_uuid = request.GET.get('transaction_uuid')
+#     total_amount = request.GET.get('total_amount')
+#     status = request.GET.get('status')
+#     signature = request.GET.get('signature')
+
+#     if not all([transaction_uuid, total_amount, status, signature]):
+#         return redirect('payment_failure')
+
+#     # Verify signature (recommended)
+#     # if not verify_esewa_signature(...):
+#     #     return redirect('payment_failure')
+
+#     if status.upper() in ["COMPLETE", "SUCCESS"]:
+#         try:
+#             with transaction.atomic():
+#                 # Save payment
+#                 payment = Payment.objects.create(
+#                     user=request.user,
+#                     payment_id=transaction_uuid,
+#                     payment_method="eSewa",
+#                     amount_paid=total_amount,
+#                     status="Completed"
+#                 )
+
+#                 # Update order
+#                 order = Order.objects.get(user=request.user, is_ordered=False)
+#                 order.payment = payment
+#                 order.is_ordered = True
+#                 order.status = 'Completed'
+#                 order.save()
+
+#                 # Clear cart
+#                 CartItem.objects.filter(user=request.user).delete()
+
+#                 return render(request, 'orders/payment_success.html')
+
+#         except ObjectDoesNotExist:
+#             return redirect('payment_failure')
+    
+#     return redirect('payment_failure')
 
 def payment_success(request):
-    transaction_uuid = request.GET.get('transaction_uuid')
-    total_amount = request.GET.get('total_amount')
-    status = request.GET.get('status')
-    signature = request.GET.get('signature')
 
-    if not all([transaction_uuid, total_amount, status, signature]):
+    data = request.GET.get('data')
+    if not data:
         return redirect('payment_failure')
-
-    # Verify signature (recommended)
-    # if not verify_esewa_signature(...):
-    #     return redirect('payment_failure')
-
+        
+    try:
+        decoded_data_str = base64.b64decode(data).decode("utf-8")
+        decoded_data = json.loads(decoded_data_str)
+    except (base64.binascii.Error, json.JSONDecodeError):
+        return redirect('payment_failure')
+    
+    product_code = 'EPAYTEST'
+    data_to_sign = (
+        f"transaction_code={decoded_data.get('transaction_code')},"
+        f"status={decoded_data.get('status')},"
+        f"total_amount={str(decoded_data.get('total_amount')).replace(',', '')},"
+        f"transaction_uuid={decoded_data.get('transaction_uuid')},"
+        f"product_code={product_code},"
+        f"signed_field_names=transaction_code,status,total_amount,transaction_uuid,product_code,signed_field_names"
+    )
+    computed_signature = gensignature(data_to_sign)
+    
+    # Check if the signature matches
+    if str(decoded_data.get('signature')) != computed_signature:
+        return redirect('payment_failure')
+    
+    # Optionally, you can set a success message here
+    messages.success(request, "Payment successful")
+    
+    # Extract necessary fields from the decoded data
+    transaction_uuid = decoded_data.get('transaction_uuid')
+    total_amount = decoded_data.get('total_amount')
+    status = decoded_data.get('status')
+    
+    if not all([transaction_uuid, total_amount, status]):
+        return redirect('payment_failure')
+    
     if status.upper() in ["COMPLETE", "SUCCESS"]:
         try:
             with transaction.atomic():
@@ -50,23 +133,24 @@ def payment_success(request):
                     amount_paid=total_amount,
                     status="Completed"
                 )
-
+    
                 # Update order
                 order = Order.objects.get(user=request.user, is_ordered=False)
                 order.payment = payment
                 order.is_ordered = True
                 order.status = 'Completed'
                 order.save()
-
+    
                 # Clear cart
                 CartItem.objects.filter(user=request.user).delete()
-
+    
                 return render(request, 'orders/payment_success.html')
-
+    
         except ObjectDoesNotExist:
             return redirect('payment_failure')
     
     return redirect('payment_failure')
+
 
 def payment_failure(request):
     # You might want to log failed attempts here
@@ -136,6 +220,8 @@ def place_order(request,total=0, quantity=0,):
             order = Order.objects.get(user=current_user, is_ordered=False, order_number=order_number)
 
             uuid_val = uuid.uuid4()
+
+
 
             secret_key = '8gBm/:&EnhH.1/q'
             # data_to_sign = f"{grand_total}, {uuid_val}, EPAYTEST"

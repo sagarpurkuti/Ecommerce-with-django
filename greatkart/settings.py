@@ -27,7 +27,7 @@ SECRET_KEY = 'vd@8(haj1d2=_tn5mj120_i+rx9@+5v98-_6u*%y4ybj))c1++'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
