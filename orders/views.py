@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 # from django.http import HttpResponse
 from carts.models import CartItem, Cart
 from .forms import OrderForm
-from .models import Order, Payment
+from .models import Order, Payment, OrderProduct
 from store.models import Product
 import datetime
 import json
@@ -83,15 +83,28 @@ def payment_success(request):
 
 
                 #move the cart items to order product table
+                cart_items = CartItem.objects.filter(user = request.user)
+                for item in cart_items:
+                    orderproduct = OrderProduct()
+                    orderproduct.order_id = order.id
+                    orderproduct.payment = payment
+                    orderproduct.user_id = request.user.id
+                    orderproduct.product_id = item.product_id
+                    orderproduct.quantity = item.quantity
+                    orderproduct.product_price = item.product.price
+                    orderproduct.ordered = True
+                    orderproduct.save()
+                    
+
 
                 #reduce the qunatity of sold product
-
+ 
                 # Clear cart
                 CartItem.objects.filter(user=request.user).delete()
 
                 #send order recevied email to customer
 
-                # send order number and transaction id back to
+                # send order number and transaction id back to sendData method via JsonResponse
     
                 return render(request, 'orders/payment_success.html')
     
