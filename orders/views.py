@@ -20,69 +20,9 @@ from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 
+from django.contrib import messages
 
 
-
-  
-
-from django.contrib import messages, auth
-
-# def payment_success(request):
-        
-#     data = request.GET.get('data')
-#     decoded_data_str = base64.b64decode(data).decode("utf-8")  # Decode to string first
-#     decoded_data = json.loads(decoded_data_str)  # Then load to dict
-#     product_code = 'EPAYTEST'
-    
-#     data_to_sign = f"transaction_code={decoded_data['transaction_code']},status={decoded_data['status']},total_amount={str(decoded_data['total_amount']).replace(',','')},transaction_uuid={decoded_data['transaction_uuid']},product_code={product_code},signed_field_names=transaction_code,status,total_amount,transaction_uuid,product_code,signed_field_names"
-#     signature = gensignature(data_to_sign)
-    
-    
-#     if str(decoded_data['signature']) == signature:
-#         messages.success(request,"Payment successful")
-
-
-
-#     transaction_uuid = request.GET.get('transaction_uuid')
-#     total_amount = request.GET.get('total_amount')
-#     status = request.GET.get('status')
-#     signature = request.GET.get('signature')
-
-#     if not all([transaction_uuid, total_amount, status, signature]):
-#         return redirect('payment_failure')
-
-#     # Verify signature (recommended)
-#     # if not verify_esewa_signature(...):
-#     #     return redirect('payment_failure')
-
-#     if status.upper() in ["COMPLETE", "SUCCESS"]:
-#         try:
-#             with transaction.atomic():
-#                 # Save payment
-#                 payment = Payment.objects.create(
-#                     user=request.user,
-#                     payment_id=transaction_uuid,
-#                     payment_method="eSewa",
-#                     amount_paid=total_amount,
-#                     status="Completed"
-#                 )
-
-#                 # Update order
-#                 order = Order.objects.get(user=request.user, is_ordered=False)
-#                 order.payment = payment
-#                 order.is_ordered = True
-#                 order.status = 'Completed'
-#                 order.save()
-
-#                 # Clear cart
-#                 CartItem.objects.filter(user=request.user).delete()
-
-#                 return render(request, 'orders/payment_success.html')
-
-#         except ObjectDoesNotExist:
-#             return redirect('payment_failure')
-    
-#     return redirect('payment_failure')
 
 def payment_success(request):
 
@@ -138,11 +78,20 @@ def payment_success(request):
                 order = Order.objects.get(user=request.user, is_ordered=False)
                 order.payment = payment
                 order.is_ordered = True
-                order.status = 'Completed'
+                order.status = 'New'
                 order.save()
-    
+
+
+                #move the cart items to order product table
+
+                #reduce the qunatity of sold product
+
                 # Clear cart
                 CartItem.objects.filter(user=request.user).delete()
+
+                #send order recevied email to customer
+
+                # send order number and transaction id back to
     
                 return render(request, 'orders/payment_success.html')
     
