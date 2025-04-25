@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-# from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from carts.models import CartItem, Cart
 from .forms import OrderForm
 from .models import Order, Payment, OrderProduct
@@ -7,6 +7,8 @@ from store.models import Product
 import datetime
 import json
 import requests
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 
 #youtube reference
 from django.views import View
@@ -94,19 +96,56 @@ def payment_success(request):
                     orderproduct.product_price = item.product.price
                     orderproduct.ordered = True
                     orderproduct.save()
+
+
+                    cart_item = CartItem.objects.get(id=item.id)
+                    product_variation = cart_item.variations.all()
+                    orderproduct = OrderProduct.objects.get(id=orderproduct.id)
+                    orderproduct.variation.set(product_variation)
+                    orderproduct.save()
                     
-
-
-                #reduce the qunatity of sold product
+                    #reduce the quantity of sold product
+                    product = Product.objects.get(id= item.product_id)
+                    product.stock -=item.quantity
+                    product.save()
  
                 # Clear cart
                 CartItem.objects.filter(user=request.user).delete()
 
                 #send order recevied email to customer
+                mail_subject = 'Order Recevied'
+                message      = render_to_string('orders/order_received_email.html',{
+                    'user'   : request.user,
+                    'order'  : order,
+                })
+                to_email    = request.user.email
+                send_email  = EmailMessage(mail_subject, message, to=[to_email])
+                send_email.send()
 
                 # send order number and transaction id back to sendData method via JsonResponse
-    
-                return render(request, 'orders/payment_success.html')
+                data = {
+                    'order_number'  :   order.order_number,
+                    'transID'       :   payment.payment_id
+                }
+
+
+                try:
+                    order = Order.objects.get(order_number=order.order_number, is_ordered=True)
+                    ordered_products = OrderProduct.objects.filter(order_id=order.id)
+                
+                    # payment = Payment.objects.get(payment_id=transID)
+
+                    context = {
+                        'order' : order,
+                        'ordered_products' : ordered_products,
+                        'order_number'     : order.order_number,
+                        'transID'          : payment.payment_id,
+                        'payment'          : payment,
+                    }
+                    return render(request, 'orders/payment_success.html', context)
+                except(Payment.DoesNotExist, Order.DoesNotExist):
+                    return redirect('home')
+
     
         except ObjectDoesNotExist:
             return redirect('payment_failure')
