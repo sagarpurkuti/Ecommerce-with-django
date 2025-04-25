@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, JsonResponse
+# from django.http import HttpResponse, JsonResponse
 from carts.models import CartItem, Cart
 from .forms import OrderForm
 from .models import Order, Payment, OrderProduct
@@ -10,7 +10,7 @@ import requests
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 
-#youtube reference
+#yt reference
 from django.views import View
 import hmac
 import hashlib
@@ -156,6 +156,7 @@ def payment_success(request):
 def payment_failure(request):
     # You might want to log failed attempts here
     return render(request, 'orders/payment_failure.html')
+
 
 def gensignature(data_to_sign):
    
