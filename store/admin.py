@@ -1,15 +1,16 @@
 from django.contrib import admin
 from store.models import Product, Variation, ReviewRating, ProductGallery
+import admin_thumbnails
 # Register your models here.
 
-
+@admin_thumbnails.thumbnail('image')
 class ProductGalleryInline(admin.TabularInline):
-    modell = ProductGallery
+    model = ProductGallery
     extra = 1
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('product_name', 'price', 'stock', 'category', 'modified_date', 'is_available')
-    prepopulated_fields = {'slug':('product_name',)}
+    prepopulated_fields = {'slug': ('product_name',)}
     inlines = [ProductGalleryInline]
 
 

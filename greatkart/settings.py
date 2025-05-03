@@ -169,3 +169,6 @@ EMAIL_PORT          = 587
 EMAIL_HOST_USER     = "sagar@prixa.org"
 EMAIL_HOST_PASSWORD = "bfpy hztk pvvf jjwr"
 EMAIL_USE_TLS     = True
+
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
