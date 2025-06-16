@@ -166,7 +166,12 @@ def dashboard(request):
     orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id, is_ordered=True)
     orders_count = orders.count()
 
-    userprofile = UserProfile.objects.get(user_id= request.user.id)
+    try:
+        userprofile = UserProfile.objects.get(user_id=request.user.id)
+    except UserProfile.DoesNotExist:
+        messages.error(request, "You must be a registered user to access the dashboard.")
+        return redirect('login')
+    
     context={
         'orders_count':orders_count,
         'userprofile':userprofile,

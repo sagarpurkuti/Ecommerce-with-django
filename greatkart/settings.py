@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 import os
 
@@ -22,10 +23,10 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'vd@8(haj1d2=_tn5mj120_i+rx9@+5v98-_6u*%y4ybj))c1++'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['*']
 
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'carts',
     'greatkart',
     'orders',
+    'vendor',
 ]
 
 MIDDLEWARE = [
@@ -164,11 +166,11 @@ MESSAGE_TAGS = {
 # EMAIL_SSL_CERTFILE = None
 # EMAIL_SSL_KEYFILE = None
 
-EMAIL_HOST          = "smtp.gmail.com"
-EMAIL_PORT          = 587
-EMAIL_HOST_USER     = "sagar@prixa.org"
-EMAIL_HOST_PASSWORD = "bfpy hztk pvvf jjwr"
-EMAIL_USE_TLS     = True
+EMAIL_HOST          = config('EMAIL_HOST')
+EMAIL_PORT          = config('EMAIL_PORT', cast=int)
+EMAIL_HOST_USER     = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS       = config('EMAIL_USE_TLS', cast=bool)
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

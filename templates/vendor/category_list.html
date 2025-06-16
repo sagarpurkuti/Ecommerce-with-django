@@ -1,0 +1,64 @@
+
+{% extends 'vendor/admin_base.html' %}
+
+{% block title %}
+Seller Dashboard | Category List
+{% endblock title %}
+
+{% block view %}
+
+
+<section class="home">
+      <h1 class="text" style="margin-left: 20px;">Category List:</h1>
+          <!-- Add deal container -->
+          <div class="container">
+              <a href="{%  url 'add_category' %}">
+                  <button class="add-deal-button">ADD CATEGORY</button>
+              </a>
+          </div>
+      
+      <div class="table-responsive">
+        
+        
+        
+        <table>
+            <tr>
+                <th>Category Name</th>
+                <th>Slug</th>
+                <th>Actions</th>
+            </tr>
+            {% for category in categories %}
+            <tr>
+                <td>{{category.category_name}}</td>
+                <td>{{category.slug}}</td>
+                <td>
+                  <!-- Delete button -->
+                  <a href="#" class="action-btn delete-btn">Delete</a>
+                </td>
+                
+            </tr>
+            {% endfor %}
+            
+        </table>
+      </div> 
+
+
+
+
+</section>
+{% endblock view %}
+
+
+
+  
+
+  
+
+
+
+
+
+
+
+
+

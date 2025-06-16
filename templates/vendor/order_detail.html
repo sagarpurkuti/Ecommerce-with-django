@@ -1,0 +1,157 @@
+
+{% extends 'vendor/admin_base.html' %}
+
+{% block title %}
+Seller Dashboard
+{% endblock title %}
+
+{% block view %}
+<style>
+    .add-deal-button {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    .container{
+        text-align: right;
+        margin-top: 20px;
+    }
+    
+    table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-left: 20px;
+            }
+
+            th, td {
+              padding: 15px;
+              text-align: left;
+              border-bottom: 1px solid #ddd;
+            }
+
+            th {
+              background-color: #99bde4; /* Blue */
+              color: black;
+              border-radius: 2px;
+            }
+
+            tr:hover {
+              background-color: #f2f2f2; /* Light gray */
+            }
+
+</style>
+
+<section class="home">
+
+    {% comment %} <div class="text">Customer Orders</div> {% endcomment %}
+      
+
+
+
+      <h1 class="text" style="margin-left: 20px;">Order Detail</h1>
+      
+    <div class="table-responsive">
+
+        <!-- col-lg-6 end here -->
+        <div class="col-lg-12">
+
+
+            
+            <div class="invoice-items">
+                <div class="table-responsive" style="overflow: hidden; outline: none;" tabindex="0">
+                    <div class="invoice-details mt-25">
+                        <div class="well">
+                            <div class="invoice-from">
+                                <ul class="list-unstyled text-right">
+                                    <li><strong>Invoiced To</strong></li>
+                                    <li>{{order.full_name}}</li>
+                                    <li>{{order.full_address}} </li>
+                                    <li>{{order.city}}, {{order.state}} </li>
+                                    <li>{{order.country}}</li>
+                                </ul>
+                            </div>
+                            <ul class="list-unstyled mb0">
+                                <li><strong>Order No:</strong> {{order.order_number}}</li>
+                                <li><strong>Transaction ID:</strong> {{order.payment.payment_id}}</li>
+                                <li><strong>Order Date:</strong> {{order.created_at}}</li>
+                                <li><strong>Payment Status:</strong> {{order.payment.status}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="per70 text-center">Product</th>
+                                <th class="per5 text-center">Qty</th>
+                                <th class="per25 text-center">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order_detail %}
+                            <tr>
+                                <td>{{item.product.product_name}}
+                                <p class="text-muted small">
+                                    {% if item.variation.all %}
+                                        {% for i in item.variation.all %}
+                                            {{ i.variation_category | capfirst }}:{{ i.variation_value | capfirst }}<br>
+                                        {% endfor %}
+                                    {% endif %}
+                                
+                                </p>
+                                </td>
+                                <td class="text-center">{{item.quantity}}</td>
+                                <td class="text-center">Rs.{{item.product_price}}</td>
+                            </tr> 
+                            {% endfor %}
+
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="2" class="text-right">Sub Total:</th>
+                                <th class="text-center">Rs.{{subtotal}}</th>
+                            </tr>
+                            <tr>
+                                <th colspan="2" class="text-right">Tax:</th>
+                                <th class="text-center">Rs.{{order.tax}}</th>
+                            </tr>
+                            
+                            <tr>
+                                <th colspan="2" class="text-right">Grand Total:</th>
+                                <th class="text-center">Rs.{{order.order_total}}</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- col-lg-12 end here -->
+    </div> 
+
+
+
+
+</section>
+{% endblock view %}
+
+
+
+  
+
+  
+
+
+
+
+
+
+
+
+

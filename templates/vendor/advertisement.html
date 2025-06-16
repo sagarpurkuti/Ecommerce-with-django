@@ -1,0 +1,44 @@
+{% extends 'vendor/admin_base.html' %}
+
+{% block title %}
+Advertisement Upload
+{% endblock title %}
+
+{% block view %}
+<section class="home">
+  <h1 class="text" style="margin-left: 20px;">Advertisements</h1>
+
+  <div class="container my-3">
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-success">Upload</button>
+    </form>
+  </div>
+
+  <hr>
+
+  <h2 class="text mx-3">Uploaded Advertisements:</h2>
+
+  <div class="row mx-3">
+    {% for ad in ads %}
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <img src="{{ ad.image.url }}" class="card-img-top" alt="{{ ad.ad_name }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ ad.ad_name }}</h5>
+                            <td>
+                  <!-- Edit button -->
+                  <a href="#" class="ssssaction-btn edit-btn" id="editButton">Edit</a>
+                  <!-- Delete button -->
+                  <a href="#" class="action-btn delete-btn">Delete</a>
+                </td>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-center">No advertisements uploaded yet.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock view %}

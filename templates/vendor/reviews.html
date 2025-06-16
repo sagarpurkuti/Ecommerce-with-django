@@ -1,0 +1,46 @@
+{% extends 'vendor/admin_base.html' %}
+
+{% block title %}
+Seller Dashboard | Reviews and Ratings List
+{% endblock title %}
+
+{% block view %}
+
+<section class="home">
+  <h1 class="text" style="margin-left: 20px;">Reviews and Ratings:</h1>
+
+  <div class="table-responsive">
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>User</th>
+        <th>Subject</th>
+        <th>Review</th>
+        <th>Rating</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+
+      {% for review in reviews %}
+      <tr>
+        <td>{{ review.product.product_name }}</td>
+        <td>{{ review.user.email }}</td>  {# Or review.user.get_full_name if available #}
+        <td>{{ review.subject }}</td>
+        <td>{{ review.review }}</td>
+        <td>{{ review.rating }}</td>
+        <td>{{ review.status|yesno:"Approved,Not Approved" }}</td>
+        <td>{{ review.created_at|date:"Y-m-d H:i" }}</td>
+        <td>
+          <!-- Add buttons for delete or toggle approval -->
+          <a href="{% url 'delete_review' review.id %}" class="action-btn delete-btn">Delete</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="8" class="text-center">No reviews found.</td></tr>
+      {% endfor %}
+    </table>
+  </div>
+</section>
+
+{% endblock view %}
