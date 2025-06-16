@@ -5,9 +5,10 @@ from vendor.forms import ProductForm, CategoryForm, AdvertisementForm
 from vendor.models import  Advertisement
 from django.contrib import messages
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 # Create your views here.s
 
-
+@login_required(login_url='login')
 def AdminPanel(request):
     query = request.GET.get('search')
     if query:
