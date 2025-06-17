@@ -34,6 +34,7 @@ Seller Dashboard
                 <th>Contact No.</th>
                 <th>Order Toal</th>
                 <th>Order Date</th>
+                <th>Order Status</th>
                 <th>Actions</th>
             </tr>
             {% for order in orders %}
@@ -44,11 +45,12 @@ Seller Dashboard
                 <td>{{order.phone}}</td>
                 <td>{{order.order_total}}</td>
                 <td>{{order.created_at}}</td>
+                <td>{{order.status}}</td>
                 <td>
                   <!-- Edit button -->
                   <a href="{% url 'order_info' order.order_number %}" class="ssssaction-btn edit-btn" id="editButton">View</a>
                   <!-- Delete button -->
-                  <a href="#" class="action-btn delete-btn">Cancel</a>
+                  {% comment %} <a href="#" class="action-btn delete-btn">Pending</a> {% endcomment %}
                 </td>
                 
             </tr>

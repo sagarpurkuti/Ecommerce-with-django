@@ -15,6 +15,7 @@ urlpatterns = [
 
     path('categories/', views.CategoriesList, name='categories'),
     path('add_category/', views.AddCategory, name='add_category'),
+    path('del_category/<int:category_id>/', views.DeleteCategory, name='del_category'),
 
     path('review_rating/', views.ReviewRatingList, name='review_rating'),
     path('delete_review/<int:review_id>/', views.DeleteReview, name='delete_review'),

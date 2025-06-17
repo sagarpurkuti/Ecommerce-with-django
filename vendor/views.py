@@ -73,17 +73,38 @@ def orders(request):
     }
     return render(request,'vendor/orders.html',context)
 
+# def order_info(request, order_id):
+#     order_detail = OrderProduct.objects.filter(order__order_number=order_id)
+#     order = Order.objects.get(order_number=order_id)
+#     subtotal = 0
+#     for i in order_detail:
+#         subtotal +=i.product_price*i.quantity
+
+#     context = {
+#         'order_detail': order_detail,
+#         'order':order,
+#         'subtotal':subtotal,
+#     }
+#     return render(request, 'vendor/order_detail.html', context)
+
 def order_info(request, order_id):
+    order = get_object_or_404(Order, order_number=order_id)
+
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        if new_status in dict(Order.STATUS):  # Validate against defined choices
+            order.status = new_status
+            order.save()
+            messages.success(request, f"Order status updated to {new_status}.")
+            return redirect('orders')
+
     order_detail = OrderProduct.objects.filter(order__order_number=order_id)
-    order = Order.objects.get(order_number=order_id)
-    subtotal = 0
-    for i in order_detail:
-        subtotal +=i.product_price*i.quantity
+    subtotal = sum(i.product_price * i.quantity for i in order_detail)
 
     context = {
         'order_detail': order_detail,
-        'order':order,
-        'subtotal':subtotal,
+        'order': order,
+        'subtotal': subtotal,
     }
     return render(request, 'vendor/order_detail.html', context)
 
@@ -107,6 +128,12 @@ def AddCategory(request):
         form = CategoryForm()
     
     return render(request, 'vendor/add_category.html', {'form': form})
+
+def DeleteCategory(request, category_id):
+    category = get_object_or_404(Category, pk=category_id)
+    category.delete()
+    messages.success(request, "Category deleted successfully.")
+    return redirect('categories')
 
 def ReviewRatingList(request):
     reviews = ReviewRating.objects.select_related('product', 'user').all().order_by('-created_at')

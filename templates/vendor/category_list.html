@@ -33,7 +33,7 @@ Seller Dashboard | Category List
                 <td>{{category.slug}}</td>
                 <td>
                   <!-- Delete button -->
-                  <a href="#" class="action-btn delete-btn">Delete</a>
+                  <a href="{% url 'del_category' category.id %}" class="action-btn delete-btn">Delete</a>
                 </td>
                 
             </tr>
