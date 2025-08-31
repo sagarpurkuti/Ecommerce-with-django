@@ -6,6 +6,7 @@ from vendor import views
 urlpatterns = [
     path('', views.AdminPanel, name='admin_panel'),
 
+    path('list_product/', views.listProduct, name='list_product'),
     path('add_product/', views.AddProduct, name='add_product'),
     path('edit_product/<int:p_id>/', views.EditProduct, name='edit_product'),
     path('delete_product/<int:p_id>/', views.DeleteProduct, name='delete_product'),

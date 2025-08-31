@@ -2,67 +2,318 @@
 {% extends 'vendor/admin_base.html' %}
 
 {% block title %}
-Seller Dashboard
+Orders Management
 {% endblock title %}
 
+{% block style %}
+<style>
+    .form-label {
+        margin-left: 3rem;  
+    }
+    .form-control, .form-select {
+        border-radius: 0.5rem;
+    }
+    .card {
+        border-radius: 1rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+    .table {
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+    .table th {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+        font-weight: 600;
+        color: #495057;
+    }
+    .table td {
+        vertical-align: middle;
+    }
+    .status-badge {
+        padding: 0.375rem 0.75rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    .status-pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    .status-confirmed {
+        background-color: #d1ecf1;
+        color: #0c5460;
+    }
+    .status-shipped {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .status-delivered {
+        background-color: #d1e7dd;
+        color: #0f5132;
+    }
+    .status-cancelled {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    .action-btn {
+        padding: 0.375rem 0.75rem;
+        border-radius: 0.375rem;
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    .view-btn {
+        background-color: #0d6efd;
+        color: white;
+    }
+    .view-btn:hover {
+        background-color: #0b5ed7;
+        color: white;
+    }
+    .order-link {
+        color: #0d6efd;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    .order-link:hover {
+        color: #0b5ed7;
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block data_breadcrumb %}
+{% endblock data_breadcrumb %}
+
 {% block view %}
-
-
-<section class="home">
-
-      <div class="col-md-6">
-        <div class="card" style="text-align:center;">
-            <div class="card-body">
-                <h5 class="card-title"> Total Orders</h5>
-                <h4>{{orders_count}}</h4>
-            </div>
+  <!--start main wrapper-->
+  <main class="main-wrapper">
+    <div class="main-content">
+      <!--breadcrumb-->
+      <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+        <div class="breadcrumb-title pe-3">Orders</div>
+        <div class="ps-3">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 p-0">
+              <li class="breadcrumb-item"><a href="{% url 'admin_panel' %}"><i class="bx bx-home-alt"></i></a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">Order Management</li>
+            </ol>
+          </nav>
+        </div>
+        <div class="ms-auto">
+          <div class="btn-group">
+            <a href="{% url 'admin_panel' %}" class="btn btn-secondary">
+              <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+            </a>
+          </div>
         </div>
       </div>
-      
+      <!--end breadcrumb-->
 
+      <div class="row">
+        <div class="col-12 col-lg-8">
+          <!-- Orders Table -->
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="card-title mb-0">Order List</h5>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-download me-1"></i>Export
+                  </button>
+                  <button class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-funnel me-1"></i>Filter
+                  </button>
+                </div>
+              </div>
+              
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Order Number</th>
+                      <th>Contact No.</th>
+                      <th>Order Total</th>
+                      <th>Order Date</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for order in orders %}
+                    <tr>
+                      <td>
+                        <a href="{% url 'order_info' order.order_number %}" class="order-link">
+                          {{order.order_number}}
+                        </a>
+                      </td>
+                      <td>{{order.phone}}</td>
+                      <td>
+                        <span class="fw-bold text-primary">${{order.order_total}}</span>
+                      </td>
+                      <td>{{order.created_at|date:"M d, Y"}}</td>
+                      <td>
+                        {% if order.status == 'Pending' %}
+                          <span class="status-badge status-pending">{{order.status}}</span>
+                        {% elif order.status == 'Confirmed' %}
+                          <span class="status-badge status-confirmed">{{order.status}}</span>
+                        {% elif order.status == 'Shipped' %}
+                          <span class="status-badge status-shipped">{{order.status}}</span>
+                        {% elif order.status == 'Delivered' %}
+                          <span class="status-badge status-delivered">{{order.status}}</span>
+                        {% elif order.status == 'Cancelled' %}
+                          <span class="status-badge status-cancelled">{{order.status}}</span>
+                        {% else %}
+                          <span class="status-badge status-pending">{{order.status}}</span>
+                        {% endif %}
+                      </td>
+                      <td>
+                        <a href="{% url 'order_info' order.order_number %}" class="action-btn view-btn">
+                          <i class="bi bi-eye me-1"></i>View
+                        </a>
+                      </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                      <td colspan="6" class="text-center py-4">
+                        <div class="text-muted">
+                          <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                          <h6>No Orders Found</h6>
+                          <p class="mb-0">There are no orders to display at the moment.</p>
+                        </div>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
 
+        <div class="col-12 col-lg-4">
+          <!-- Order Statistics -->
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title mb-3">Order Statistics</h6>
+              <div class="row g-3">
+                <div class="col-6">
+                  <div class="text-center p-3 bg-primary bg-opacity-10 rounded">
+                    <h4 class="mb-1 text-primary">{{orders_count}}</h4>
+                    <small class="text-muted">Total Orders</small>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="text-center p-3 bg-success bg-opacity-10 rounded">
+                    <h4 class="mb-1 text-success">0</h4>
+                    <small class="text-muted">Delivered</small>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="text-center p-3 bg-warning bg-opacity-10 rounded">
+                    <h4 class="mb-1 text-warning">0</h4>
+                    <small class="text-muted">Pending</small>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="text-center p-3 bg-info bg-opacity-10 rounded">
+                    <h4 class="mb-1 text-info">0</h4>
+                    <small class="text-muted">Processing</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-      <h1 class="text" style="margin-left: 20px;">Order List:</h1>
-      
-      <div class="table-responsive">
-        
-        
-        
-        <table>
-            <tr>
-                <th>Order Number</th>
-                <th>Contact No.</th>
-                <th>Order Toal</th>
-                <th>Order Date</th>
-                <th>Order Status</th>
-                <th>Actions</th>
-            </tr>
-            {% for order in orders %}
-            <tr>
-                <td>
-                    <a href="{% url 'order_info' order.order_number %}" >{{order.order_number}}</a>
-                </td>
-                <td>{{order.phone}}</td>
-                <td>{{order.order_total}}</td>
-                <td>{{order.created_at}}</td>
-                <td>{{order.status}}</td>
-                <td>
-                  <!-- Edit button -->
-                  <a href="{% url 'order_info' order.order_number %}" class="ssssaction-btn edit-btn" id="editButton">View</a>
-                  <!-- Delete button -->
-                  {% comment %} <a href="#" class="action-btn delete-btn">Pending</a> {% endcomment %}
-                </td>
-                
-            </tr>
-            {% endfor %}
-            
-        </table>
-      </div> 
+          <!-- Recent Activity -->
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title mb-3">Recent Activity</h6>
+              <div class="d-flex flex-column gap-3">
+                {% for order in orders|slice:":3" %}
+                <div class="d-flex align-items-center gap-3">
+                  <div class="flex-shrink-0">
+                    <div class="bg-primary bg-opacity-10 rounded-circle p-2">
+                      <i class="bi bi-cart text-primary"></i>
+                    </div>
+                  </div>
+                  <div class="flex-grow-1">
+                    <h6 class="mb-1 small">New Order #{{order.order_number}}</h6>
+                    <p class="mb-0 text-muted small">{{order.created_at|timesince}} ago</p>
+                  </div>
+                </div>
+                {% empty %}
+                <div class="text-center text-muted py-3">
+                  <i class="bi bi-clock fs-4 d-block mb-2"></i>
+                  <small>No recent activity</small>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
 
+          <!-- Quick Actions -->
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title mb-3">Quick Actions</h6>
+              <div class="d-grid gap-2">
+                <button class="btn btn-outline-primary btn-sm">
+                  <i class="bi bi-plus-circle me-2"></i>Create Order
+                </button>
+                <button class="btn btn-outline-success btn-sm">
+                  <i class="bi bi-download me-2"></i>Export Orders
+                </button>
+                <button class="btn btn-outline-info btn-sm">
+                  <i class="bi bi-graph-up me-2"></i>View Reports
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!--end row-->
+    </div>
+  </main>
+  <!--end main wrapper-->
 
+  <!-- Success/Error Messages -->
+  {% if messages %}
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          <i class="bi bi-{% if message.tags == 'success' %}check-circle text-success{% elif message.tags == 'error' %}exclamation-triangle text-danger{% else %}info-circle text-info{% endif %} me-2"></i>
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
 
+  <script>
+    // Auto-hide alerts after 5 seconds
+    setTimeout(function() {
+      const alerts = document.querySelectorAll('.alert');
+      alerts.forEach(function(alert) {
+        const bsAlert = new bootstrap.Alert(alert);
+        bsAlert.close();
+      });
+    }, 5000);
 
-</section>
+    // Add hover effects to table rows
+    document.addEventListener('DOMContentLoaded', function() {
+      const tableRows = document.querySelectorAll('tbody tr');
+      tableRows.forEach(function(row) {
+        row.addEventListener('mouseenter', function() {
+          this.style.backgroundColor = '#f8f9fa';
+        });
+        row.addEventListener('mouseleave', function() {
+          this.style.backgroundColor = '';
+        });
+      });
+    });
+  </script>
 {% endblock view %}
 
 

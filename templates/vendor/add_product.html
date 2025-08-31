@@ -10,27 +10,166 @@ Add Product
     .form-label {
         margin-left: 3rem;  
     }
+    .form-control, .form-select {
+        border-radius: 0.5rem;
+    }
+    .card {
+        border-radius: 1rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
 </style>
 {% endblock %}
 
-{% block view %}
-<section class="home">
-    <div class="text">Let's Add New Product</div>
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% for field in form %}
-            <div class="mb-3">
-                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                {{ field }}
-                {% if field.errors %}
-                    <div class="text-danger">{{ field.errors }}</div>
-                {% endif %}
-            </div>
-        {% endfor %}
-        <button type="submit" class="btn btn-primary w-100 mt-3 my-8 mx-8">Add Product</button>
-    </form>
+{% block data_breadcrumb %}
+{% endblock data_breadcrumb %}
 
-</section>
+
+{% block view %}
+  <!--start main wrapper-->
+  <main class="main-wrapper">
+    <div class="main-content">
+      <!--breadcrumb-->
+      <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+        <div class="breadcrumb-title pe-3">Products</div>
+        <div class="ps-3">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 p-0">
+              <li class="breadcrumb-item"><a href=""><i class="bx bx-home-alt"></i></a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">Add Product</li>
+            </ol>
+          </nav>
+        </div>
+        <div class="ms-auto">
+          <div class="btn-group">
+            <a href="{% url 'list_product' %}" class="btn btn-secondary">
+              <i class="bi bi-arrow-left me-2"></i>Back to Products
+            </a>
+          </div>
+        </div>
+      </div>
+      <!--end breadcrumb-->
+
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-12 col-lg-8">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title mb-4">Product Information</h5>
+                
+                {% for field in form %}
+                  {% if field.field.widget.input_type == 'checkbox' %}
+                    <div class="mb-4">
+                      <div class="form-check">
+                        {{ field }}
+                        <label for="{{ field.id_for_label }}" class="form-check-label ms-2">{{ field.label }}</label>
+                      </div>
+                      {% if field.errors %}
+                        <div class="text-danger small mt-1">{{ field.errors }}</div>
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  {% else %}
+                    <div class="mb-4">
+                      <label for="{{ field.id_for_label }}" class="form-label fw-bold">{{ field.label }}</label>
+                      {{ field }}
+                      {% if field.errors %}
+                        <div class="text-danger small mt-1">{{ field.errors }}</div>
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                      {% if field.name == 'images' %}
+                        <small class="text-muted">Upload product images (JPG, PNG, JPEG)</small>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-lg-4">
+            <!-- Action Buttons -->
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-title mb-3">Actions</h6>
+                <div class="d-flex align-items-center gap-3">
+                  <a href="{% url 'list_product' %}" class="btn btn-outline-danger flex-fill">
+                    <i class="bi bi-x-circle me-2"></i>Cancel
+                  </a>
+                  <button type="submit" class="btn btn-primary flex-fill">
+                    <i class="bi bi-check-circle me-2"></i>Add Product
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-title mb-3">Quick Stats</h6>
+                <div class="row g-3">
+                  <div class="col-6">
+                    <div class="text-center p-3 bg-light rounded">
+                      <h6 class="mb-1 text-primary">0</h6>
+                      <small class="text-muted">Total Products</small>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="text-center p-3 bg-light rounded">
+                      <h6 class="mb-1 text-success">0</h6>
+                      <small class="text-muted">Active</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div><!--end row-->
+      </form>
+    </div>
+  </main>
+  <!--end main wrapper-->
+
+  <!-- Success/Error Messages -->
+  {% if messages %}
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          <i class="bi bi-{% if message.tags == 'success' %}check-circle text-success{% elif message.tags == 'error' %}exclamation-triangle text-danger{% else %}info-circle text-info{% endif %} me-2"></i>
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <script>
+    // Auto-hide alerts after 5 seconds
+    setTimeout(function() {
+      const alerts = document.querySelectorAll('.alert');
+      alerts.forEach(function(alert) {
+        const bsAlert = new bootstrap.Alert(alert);
+        bsAlert.close();
+      });
+    }, 5000);
+
+    // Form validation enhancement
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.querySelector('form');
+      const submitBtn = form.querySelector('button[type="submit"]');
+      
+      form.addEventListener('submit', function() {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Adding Product...';
+      });
+    });
+  </script>
 {% endblock view %}
 
 

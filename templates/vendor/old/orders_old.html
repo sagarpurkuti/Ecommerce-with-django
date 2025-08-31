@@ -1,0 +1,84 @@
+
+{% extends 'vendor/admin_base.html' %}
+
+{% block title %}
+Seller Dashboard
+{% endblock title %}
+
+{% block data_breadcrumb %}
+{% endblock data_breadcrumb %}
+
+{% block view %}
+
+
+<section class="home">
+
+      <div class="col-md-6">
+        <div class="card" style="text-align:center;">
+            <div class="card-body">
+                <h5 class="card-title"> Total Orders</h5>
+                <h4>{{orders_count}}</h4>
+            </div>
+        </div>
+      </div>
+      
+
+
+
+      <h1 class="text" style="margin-left: 20px;">Order List:</h1>
+      
+      <div class="table-responsive">
+        
+        
+        
+        <table>
+            <tr>
+                <th>Order Number</th>
+                <th>Contact No.</th>
+                <th>Order Toal</th>
+                <th>Order Date</th>
+                <th>Order Status</th>
+                <th>Actions</th>
+            </tr>
+            {% for order in orders %}
+            <tr>
+                <td>
+                    <a href="{% url 'order_info' order.order_number %}" >{{order.order_number}}</a>
+                </td>
+                <td>{{order.phone}}</td>
+                <td>{{order.order_total}}</td>
+                <td>{{order.created_at}}</td>
+                <td>{{order.status}}</td>
+                <td>
+                  <!-- Edit button -->
+                  <a href="{% url 'order_info' order.order_number %}" class="ssssaction-btn edit-btn" id="editButton">View</a>
+                  <!-- Delete button -->
+                  {% comment %} <a href="#" class="action-btn delete-btn">Pending</a> {% endcomment %}
+                </td>
+                
+            </tr>
+            {% endfor %}
+            
+        </table>
+      </div> 
+
+
+
+
+</section>
+{% endblock view %}
+
+
+
+  
+
+  
+
+
+
+
+
+
+
+
+

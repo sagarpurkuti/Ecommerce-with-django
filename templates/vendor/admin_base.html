@@ -1,202 +1,1403 @@
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" data-bs-theme="light">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seller Dashboard</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dealsite | Admin Dashboard</title>
+  <!--favicon-->
+  <link rel="icon" href="{% static 'assets/images/favicon-32x32.png' %}" type="image/png">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@8/dist/sweetalert2.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <!--plugins-->
+  <link href="{% static 'assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/plugins/metismenu/metisMenu.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/plugins/metismenu/mm-vertical.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/plugins/simplebar/css/simplebar.css' %}">
+  <!--bootstrap css-->
+  <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Material+Icons+Outlined" rel="stylesheet">
+  <!--main css-->
+  <link href="{% static 'assets/css/bootstrap-extended.css' %}" rel="stylesheet">
+  <link href="{% static 'sass/main.css' %}" rel="stylesheet">
+  <link href="{% static 'sass/dark-theme.css' %}" rel="stylesheet">
+  <link href="{% static 'sass/semi-dark.css' %}" rel="stylesheet">
+  <link href="{% static 'sass/bordered-theme.css' %}" rel="stylesheet">
+  <link href="{% static 'sass/responsive.css' %}" rel="stylesheet">
 
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel='stylesheet' href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'>
-<link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap'><link rel="stylesheet" href="./style.css">
-
-<link href="{% static 'css/admin.css' %}" rel="stylesheet" type="text/css"/>
-
-   
 </head>
+
 <body>
 
-  <nav class="sidebar close">
-    <header>
-      <div class="image-text">
-        <span class="image">
-          <a href="{% url 'admin_panel' %}">
-            <img class="logo" src="{% static 'images/logo1.png' %}">
-          </a>
-        </span>
+  <!--start header-->
+  <header class="top-header">
+    <nav class="navbar navbar-expand align-items-center gap-4">
+      <div class="btn-toggle">
+        <a href="javascript:;"><i class="material-icons-outlined">menu</i></a>
+      </div>
+      <div class="search-bar flex-grow-1">
+        <div class="position-relative">
+          <input class="form-control rounded-5 px-5 search-control d-lg-block d-none" type="text" placeholder="Search">
+          <span class="material-icons-outlined position-absolute d-lg-block d-none ms-3 translate-middle-y start-0 top-50">search</span>
+          <span class="material-icons-outlined position-absolute me-3 translate-middle-y end-0 top-50 search-close">close</span>
+          <div class="search-popup p-3">
+            <div class="card rounded-4 overflow-hidden">
+              <div class="card-header d-lg-none">
+                <div class="position-relative">
+                  <input class="form-control rounded-5 px-5 mobile-search-control" type="text" placeholder="Search">
+                  <span class="material-icons-outlined position-absolute ms-3 translate-middle-y start-0 top-50">search</span>
+                  <span class="material-icons-outlined position-absolute me-3 translate-middle-y end-0 top-50 mobile-search-close">close</span>
+                 </div>
+              </div>
+              <div class="card-body search-content">
+                <p class="search-title">Recent Searches</p>
+                <div class="d-flex align-items-start flex-wrap gap-2 kewords-wrapper">
+                  <a href="javascript:;" class="kewords"><span>Angular Template</span><i
+                      class="material-icons-outlined fs-6">search</i></a>
+                </div>
+
   
-        <div class="text logo-text">
-          <span class="name">Ecommerce </span>
-          <!-- <span class="profession">Dashboard</span> -->
+              </div>
+              <div class="card-footer text-center bg-transparent">
+                <a href="javascript:;" class="btn w-100">See All Search Results</a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-  
-      <i class='bx bx-chevron-right toggle'></i>
-    </header>
-  
-    <div class="menu-bar">
-      <div class="menu">
-        {% comment %}   
-        <li class="search-box">
-          <i class='bx bx-search icon'></i>
-          <input type="text" placeholder="Search...">
-        </li> {% endcomment %}
-  
-        <ul class="menu-links">
-          
-        <!-- Products List -->
-        <li >
-        <a href="/admin-panel/">
-            <i class='bx bx-list-ul icon'></i>
-            <span class="text nav-text">
-            Products
-            </span>
-        </a>
+      <ul class="navbar-nav gap-1 nav-right-links align-items-center">
+        <li class="nav-item d-lg-none mobile-search-btn">
+          <a class="nav-link" href="javascript:;"><i class="material-icons-outlined">search</i></a>
         </li>
+        <li class="nav-item dropdown position-static">
+          <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-bs-auto-close="outside"
+          data-bs-toggle="dropdown" href="javascript:;"><i class="material-icons-outlined">done_all</i></a>
+          <div class="dropdown-menu dropdown-menu-end mega-menu shadow-lg p-4 p-lg-5">
+            <div class="mega-menu-widgets">
+             <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3 g-4 g-lg-5">
+                <div class="col">
+                  <div class="card rounded-4 shadow-none border mb-0">
+                    <div class="card-body">
+                      <div class="d-flex align-items-start gap-3">
+                        <!-- <div class="mega-menu-icon flex-shrink-0">
+                          <i class="material-icons-outlined">question_answer</i>
+                        </div> -->
+                        <img src="{% static 'assets/images/megaIcons/06.png' %}" width="40" alt="">
+                        <div class="mega-menu-content">
+                           <h5>Marketing</h5>
+                           <p class="mb-0 f-14">In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate
+                             the visual form of a document.</p>
+                        </div>
+                     </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="card rounded-4 shadow-none border mb-0">
+                    <div class="card-body">
+                      <div class="d-flex align-items-start gap-3">
+                        <img src="{% static 'assets/images/megaIcons/02.png' %}" width="40" alt="">
+                        <div class="mega-menu-content">
+                           <h5>Website</h5>
+                           <p class="mb-0 f-14">In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate
+                             the visual form of a document.</p>
+                        </div>
+                     </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="card rounded-4 shadow-none border mb-0">
+                    <div class="card-body">
+                      <div class="d-flex align-items-start gap-3">
+                        <img src="{% static 'assets/images/megaIcons/03.png' %}" width="40" alt="">
+                        <div class="mega-menu-content">
+                            <h5>Subscribers</h5>
+                           <p class="mb-0 f-14">In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate
+                             the visual form of a document.</p>
+                        </div>
+                     </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="card rounded-4 shadow-none border mb-0">
+                    <div class="card-body">
+                      <div class="d-flex align-items-start gap-3">
+                        <img src="{% static 'assets/images/megaIcons/01.png' %}" width="40" alt="">
+                        <div class="mega-menu-content">
+                           <h5>Hubspot</h5>
+                           <p class="mb-0 f-14">In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate
+                             the visual form of a document.</p>
+                        </div>
+                     </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="card rounded-4 shadow-none border mb-0">
+                    <div class="card-body">
+                      <div class="d-flex align-items-start gap-3">
+                        <img src="{% static 'assets/images/megaIcons/11.png' %}" width="40" alt="">
+                        <div class="mega-menu-content">
+                           <h5>Templates</h5>
+                           <p class="mb-0 f-14">In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate
+                             the visual form of a document.</p>
+                        </div>
+                     </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="card rounded-4 shadow-none border mb-0">
+                    <div class="card-body">
+                      <div class="d-flex align-items-start gap-3">
+                        <img src="{% static 'assets/images/megaIcons/13.png' %}" width="40" alt="">
+                        <div class="mega-menu-content">
+                           <h5>Ebooks</h5>
+                           <p class="mb-0 f-14">In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate
+                             the visual form of a document.</p>
+                        </div>
+                     </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="card rounded-4 shadow-none border mb-0">
+                    <div class="card-body">
+                      <div class="d-flex align-items-start gap-3">
+                        <img src="{% static 'assets/images/megaIcons/12.png' %}" width="40" alt="">
+                        <div class="mega-menu-content">
+                           <h5>Sales</h5>
+                           <p class="mb-0 f-14">In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate
+                             the visual form of a document.</p>
+                        </div>
+                     </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="card rounded-4 shadow-none border mb-0">
+                    <div class="card-body">
+                      <div class="d-flex align-items-start gap-3">
+                        <img src="{% static 'assets/images/megaIcons/08.png' %}" width="40" alt="">
+                        <div class="mega-menu-content">
+                           <h5>Tools</h5>
+                           <p class="mb-0 f-14">In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate
+                             the visual form of a document.</p>
+                        </div>
+                     </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="card rounded-4 shadow-none border mb-0">
+                    <div class="card-body">
+                      <div class="d-flex align-items-start gap-3">
+                        <img src="{% static 'assets/images/megaIcons/09.png' %}" width="40" alt="">
+                        <div class="mega-menu-content">
+                           <h5>Academy</h5>
+                           <p class="mb-0 f-14">In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate
+                             the visual form of a document.</p>
+                        </div>
+                     </div>
+                    </div>
+                  </div>
+                </div>
+             </div><!--end row-->
+            </div>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-bs-auto-close="outside"
+            data-bs-toggle="dropdown" href="javascript:;"><i class="material-icons-outlined">apps</i></a>
+          <div class="dropdown-menu dropdown-menu-end dropdown-apps shadow-lg p-3">
+            <div class="border rounded-4 overflow-hidden">
+              <div class="row row-cols-3 g-0 border-bottom">
+                <div class="col border-end">
+                  <div class="app-wrapper d-flex flex-column gap-2 text-center">
+                    <div class="app-icon">
+                      <img src="{% static 'assets/images/apps/01.png' %}" width="36" alt="">
+                    </div>
+                    <div class="app-name">
+                      <p class="mb-0">Gmail</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col border-end">
+                  <div class="app-wrapper d-flex flex-column gap-2 text-center">
+                    <div class="app-icon">
+                      <img src="{% static 'assets/images/apps/02.png' %}" width="36" alt="">
+                    </div>
+                    <div class="app-name">
+                      <p class="mb-0">Skype</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="app-wrapper d-flex flex-column gap-2 text-center">
+                    <div class="app-icon">
+                      <img src="{% static 'assets/images/apps/03.png' %}" width="36" alt="">
+                    </div>
+                    <div class="app-name">
+                      <p class="mb-0">Slack</p>
+                    </div>
+                  </div>
+                </div>
+              </div><!--end row-->
 
+              <div class="row row-cols-3 g-0 border-bottom">
+                <div class="col border-end">
+                  <div class="app-wrapper d-flex flex-column gap-2 text-center">
+                    <div class="app-icon">
+                      <img src="{% static 'assets/images/apps/04.png' %}" width="36" alt="">
+                    </div>
+                    <div class="app-name">
+                      <p class="mb-0">YouTube</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col border-end">
+                  <div class="app-wrapper d-flex flex-column gap-2 text-center">
+                    <div class="app-icon">
+                      <img src="{% static 'assets/images/apps/05.png' %}" width="36" alt="">
+                    </div>
+                    <div class="app-name">
+                      <p class="mb-0">Google</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="app-wrapper d-flex flex-column gap-2 text-center">
+                    <div class="app-icon">
+                      <img src="{% static 'assets/images/apps/06.png' %}" width="36" alt="">
+                    </div>
+                    <div class="app-name">
+                      <p class="mb-0">Instagram</p>
+                    </div>
+                  </div>
+                </div>
+              </div><!--end row-->
 
-        <!-- Orders -->
-        <li>
-            <a href="{% url 'orders' %}">
-                <i class='bx bx-bell icon'></i>
-                <span class="text nav-text">Orders</span>
-            </a>
-        </li>
+              <div class="row row-cols-3 g-0 border-bottom">
+                <div class="col border-end">
+                  <div class="app-wrapper d-flex flex-column gap-2 text-center">
+                    <div class="app-icon">
+                      <img src="{% static 'assets/images/apps/07.png' %}" width="36" alt="">
+                    </div>
+                    <div class="app-name">
+                      <p class="mb-0">Spotify</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col border-end">
+                  <div class="app-wrapper d-flex flex-column gap-2 text-center">
+                    <div class="app-icon">
+                      <img src="{% static 'assets/images/apps/08.png' %}" width="36" alt="">
+                    </div>
+                    <div class="app-name">
+                      <p class="mb-0">Yahoo</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="app-wrapper d-flex flex-column gap-2 text-center">
+                    <div class="app-icon">
+                      <img src="{% static 'assets/images/apps/09.png' %}" width="36" alt="">
+                    </div>
+                    <div class="app-name">
+                      <p class="mb-0">Facebook</p>
+                    </div>
+                  </div>
+                </div>
+              </div><!--end row-->
 
-        <!-- advertisemet -->
-        <li>
-        <a href="{% url 'advertisement' %}">
-            <i class='bx bx-wallet icon'></i>
-            <span class="text nav-text">
-            Advertisement
-            </span>
-        </a>
+              <div class="row row-cols-3 g-0">
+                <div class="col border-end">
+                  <div class="app-wrapper d-flex flex-column gap-2 text-center">
+                    <div class="app-icon">
+                      <img src="{% static 'assets/images/apps/10.png' %}" width="36" alt="">
+                    </div>
+                    <div class="app-name">
+                      <p class="mb-0">Figma</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col border-end">
+                  <div class="app-wrapper d-flex flex-column gap-2 text-center">
+                    <div class="app-icon">
+                      <img src="{% static 'assets/images/apps/11.png' %}" width="36" alt="">
+                    </div>
+                    <div class="app-name">
+                      <p class="mb-0">Paypal</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="app-wrapper d-flex flex-column gap-2 text-center">
+                    <div class="app-icon">
+                      <img src="{% static 'assets/images/apps/12.png' %}" width="36" alt="">
+                    </div>
+                    <div class="app-name">
+                      <p class="mb-0">Photo</p>
+                    </div>
+                  </div>
+                </div>
+              </div><!--end row-->
+            </div>
+          </div>
         </li>
-          
-        <!-- Review and Ratings -->
-        <li>
-        <a href="{% url 'review_rating' %}">
-            <i class='bx bx-heart icon'></i>
-            <span class="text nav-text">Review and Rating</span>
-        </a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" data-bs-auto-close="outside"
+            data-bs-toggle="dropdown" href="javascript:;"><i class="material-icons-outlined">notifications</i>
+            <span class="badge-notify">5</span>
+          </a>
+          <div class="dropdown-menu dropdown-notify dropdown-menu-end shadow">
+            <div class="px-3 py-1 d-flex align-items-center justify-content-between border-bottom">
+              <h5 class="notiy-title mb-0">Notifications</h5>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle dropdown-toggle-nocaret option" type="button"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  <span class="material-icons-outlined">
+                    more_vert
+                  </span>
+                </button>
+                <div class="dropdown-menu dropdown-option dropdown-menu-end shadow">
+                  <div><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:;"><i
+                        class="material-icons-outlined fs-6">inventory_2</i>Archive All</a></div>
+                  <div><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:;"><i
+                        class="material-icons-outlined fs-6">done_all</i>Mark all as read</a></div>
+                  <div><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:;"><i
+                        class="material-icons-outlined fs-6">mic_off</i>Disable Notifications</a></div>
+                  <div><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:;"><i
+                        class="material-icons-outlined fs-6">grade</i>What's new ?</a></div>
+                  <div>
+                    <hr class="dropdown-divider">
+                  </div>
+                  <div><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:;"><i
+                        class="material-icons-outlined fs-6">leaderboard</i>Reports</a></div>
+                </div>
+              </div>
+            </div>
+            <div class="notify-list">
+              <div>
+                <a class="dropdown-item border-bottom py-2" href="javascript:;">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="">
+                      <img src="{% static 'assets/images/avatars/01.png' %}" class="rounded-circle" width="45" height="45" alt="">
+                    </div>
+                    <div class="">
+                      <h5 class="notify-title">Congratulations Jhon</h5>
+                      <p class="mb-0 notify-desc">Many congtars jhon. You have won the gifts.</p>
+                      <p class="mb-0 notify-time">Today</p>
+                    </div>
+                    <div class="notify-close position-absolute end-0 me-3">
+                      <i class="material-icons-outlined fs-6">close</i>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div>
+                <a class="dropdown-item border-bottom py-2" href="javascript:;">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="user-wrapper bg-primary text-primary bg-opacity-10">
+                      <span>RS</span>
+                    </div>
+                    <div class="">
+                      <h5 class="notify-title">New Account Created</h5>
+                      <p class="mb-0 notify-desc">From USA an user has registered.</p>
+                      <p class="mb-0 notify-time">Yesterday</p>
+                    </div>
+                    <div class="notify-close position-absolute end-0 me-3">
+                      <i class="material-icons-outlined fs-6">close</i>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div>
+                <a class="dropdown-item border-bottom py-2" href="javascript:;">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="">
+                      <img src="{% static 'assets/images/apps/13.png' %}" class="rounded-circle" width="45" height="45" alt="">
+                    </div>
+                    <div class="">
+                      <h5 class="notify-title">Payment Recived</h5>
+                      <p class="mb-0 notify-desc">New payment recived successfully</p>
+                      <p class="mb-0 notify-time">1d ago</p>
+                    </div>
+                    <div class="notify-close position-absolute end-0 me-3">
+                      <i class="material-icons-outlined fs-6">close</i>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div>
+                <a class="dropdown-item border-bottom py-2" href="javascript:;">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="">
+                      <img src="{% static 'assets/images/apps/14.png' %}" class="rounded-circle" width="45" height="45" alt="">
+                    </div>
+                    <div class="">
+                      <h5 class="notify-title">New Order Recived</h5>
+                      <p class="mb-0 notify-desc">Recived new order from michle</p>
+                      <p class="mb-0 notify-time">2:15 AM</p>
+                    </div>
+                    <div class="notify-close position-absolute end-0 me-3">
+                      <i class="material-icons-outlined fs-6">close</i>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div>
+                <a class="dropdown-item border-bottom py-2" href="javascript:;">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="">
+                      <img src="{% static 'assets/images/avatars/06.png' %}" class="rounded-circle" width="45" height="45" alt="">
+                    </div>
+                    <div class="">
+                      <h5 class="notify-title">Congratulations Jhon</h5>
+                      <p class="mb-0 notify-desc">Many congtars jhon. You have won the gifts.</p>
+                      <p class="mb-0 notify-time">Today</p>
+                    </div>
+                    <div class="notify-close position-absolute end-0 me-3">
+                      <i class="material-icons-outlined fs-6">close</i>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div>
+                <a class="dropdown-item py-2" href="javascript:;">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="user-wrapper bg-danger text-danger bg-opacity-10">
+                      <span>PK</span>
+                    </div>
+                    <div class="">
+                      <h5 class="notify-title">New Account Created</h5>
+                      <p class="mb-0 notify-desc">From USA an user has registered.</p>
+                      <p class="mb-0 notify-time">Yesterday</p>
+                    </div>
+                    <div class="notify-close position-absolute end-0 me-3">
+                      <i class="material-icons-outlined fs-6">close</i>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
         </li>
-          
-        <!-- Category-->
-        <li>
-        <a href="{% url 'categories' %}" >
-            <i class='bx bx-category icon'></i>
-            <span class="text nav-text">
-            Category
-            </span>
-        </a>
-        </li>
-  
-        </ul>
-      </div>
-
-      {% block logout %}
-      <div class="bottom-content">
-        <li class="">
-          <a href="{% url 'logout' %}">
-            <i class='bx bx-log-out icon'></i>
-            <span class="text nav-text">Logout</span>
+        <li class="nav-item">
+          <a class="nav-link position-relative" data-bs-toggle="offcanvas" href="#offcanvasCart"><i
+              class="material-icons-outlined">shopping_cart</i>
+            <span class="badge-notify bg-dark">8</span>
           </a>
         </li>
-      {% endblock logout %}
-      
-        <li class="mode">
-          <div class="sun-moon">
-            <i class='bx bx-moon icon moon'></i>
-            <i class='bx bx-sun icon sun'></i>
-          </div>
-          <span class="mode-text text">Dark mode</span>
-  
-          <div class="toggle-switch">
-            <span class="switch"></span>
+        <li class="nav-item dropdown">
+          <a href="javascrpt:;" class="dropdown-toggle dropdown-toggle-nocaret" data-bs-toggle="dropdown">
+             <img src="{% static 'assets/images/avatars/01.png' %}" class="rounded-circle p-1 border" width="45" height="45">
+          </a>
+          <div class="dropdown-menu dropdown-user dropdown-menu-end shadow">
+            <a class="dropdown-item  gap-2 py-2" href="javascript:;">
+              <div class="text-center">
+                <img src="{% static 'assets/images/avatars/01.png' %}" class="rounded-circle p-1 shadow mb-3" width="90" height="90"
+                  alt="">
+                <h5 class="user-name mb-0 fw-bold">Hello, Jhon</h5>
+              </div>
+            </a>
+            <hr class="dropdown-divider">
+            <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:;"><i
+              class="material-icons-outlined">person_outline</i>Profile</a>
+            <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:;"><i
+              class="material-icons-outlined">local_bar</i>Setting</a>
+            <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:;"><i
+              class="material-icons-outlined">dashboard</i>Dashboard</a>
+            <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:;"><i
+              class="material-icons-outlined">account_balance</i>Earning</a>
+              <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:;"><i
+                class="material-icons-outlined">cloud_download</i>Downloads</a>
+            <hr class="dropdown-divider">
+            <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:;"><i
+            class="material-icons-outlined">power_settings_new</i>Logout</a>
           </div>
         </li>
-  
+      </ul>
+
+    </nav>
+  </header>
+  <!--end top header-->
+
+
+  <!--start sidebar-->
+  <aside class="sidebar-wrapper">
+    <div class="sidebar-header">
+      <div class="logo-icon">
+        <img src="" class="logo-img" alt="">
+      </div>
+      <a href="{% url 'admin_panel' %}">
+        <div class="logo-name flex-grow-1">
+          <h5 class="mb-0">Dealsite</h5>
+        </div>
+      </a>
+
+      <div class="sidebar-close">
+        <span class="material-icons-outlined">close</span>
       </div>
     </div>
-  
-  </nav>
 
-  {% block style %}
+    <div class="sidebar-nav" data-simplebar="true">
+      <!--navigation-->
+      <ul class="metismenu" id="sidenav">
+        <li>
+          <a href="{% url 'admin_panel' %}">
+            <div class="parent-icon">
+              <i class="material-icons-outlined">dashboard</i>
+            </div>
+            <div class="menu-title">Dashboard</div>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'list_product' %}">
+            <div class="parent-icon">
+              <i class="material-icons-outlined">inventory_2</i>
+            </div>
+            <div class="menu-title">Products</div>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'orders' %}">
+            <div class="parent-icon">
+              <i class="material-icons-outlined">shopping_cart</i>
+            </div>
+            <div class="menu-title">Orders</div>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'categories' %}">
+            <div class="parent-icon">
+              <i class="material-icons-outlined">category</i>
+            </div>
+            <div class="menu-title">Categories</div>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'logout' %}">
+            <div class="parent-icon">
+              <i class="material-icons-outlined">logout</i>
+            </div>
+            <div class="menu-title">Log Out</div>
+          </a>
+        </li>
+      </ul>
+      <!--end navigation-->
+    </div>
+  </aside>
+  <!--end sidebar-->
+
+
+  <!--start main wrapper-->
+  {% block data_breadcrumb%}
+  <main class="main-wrapper">
+    <div class="main-content">
+      <!--breadcrumb-->
+      <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+        <div class="breadcrumb-title pe-3">Home</div>
+        <div class="ps-3">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 p-0">
+              <li class="breadcrumb-item"><a href="javascript:;"></a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">eCommerce</li>
+            </ol>
+          </nav>
+        </div>
+        <div class="ms-auto">
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary">Settings</button>
+            <button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">	<a class="dropdown-item" href="javascript:;">Action</a>
+              <a class="dropdown-item" href="javascript:;">Another action</a>
+              <a class="dropdown-item" href="javascript:;">Something else here</a>
+              <div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--end breadcrumb-->
+      <div class="row row-cols-1 row-cols-xl-4">
+        <div class="col">
+          <div class="card border-primary border-bottom rounded-4">
+            <div class="card-body">
+               <div class="d-flex align-items-center justify-content-between">
+                  <p class="mb-0 fs-6">Total Sales</p>
+                  <div class="dropdown">
+                    <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle"
+                      data-bs-toggle="dropdown">
+                      <span class="material-icons-outlined fs-5">more_vert</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="javascript:;">Action</a></li>
+                      <li><a class="dropdown-item" href="javascript:;">Another action</a></li>
+                      <li><a class="dropdown-item" href="javascript:;">Something else here</a></li>
+                    </ul>
+                  </div>
+               </div>
+               <div class="d-flex align-items-center justify-content-between mt-3">
+                  <div class="">
+                    <h4 class="mb-0 fw-bold">$8925.60</h4>
+                    <div class="d-flex align-items-center justify-content-start gap-1 text-success mt-3">
+                      <span class="material-icons-outlined fs-6">north</span>
+                      <p class="mb-0 fs-6">5.6%</p>
+                    </div>
+                  </div>
+                  <div id="chart1"></div>
+               </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card border-success border-bottom rounded-4">
+            <div class="card-body">
+               <div class="d-flex align-items-center justify-content-between">
+                  <p class="mb-0 fs-6">Total Income</p>
+                  <div class="dropdown">
+                    <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle"
+                      data-bs-toggle="dropdown">
+                      <span class="material-icons-outlined fs-5">more_vert</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="javascript:;">Action</a></li>
+                      <li><a class="dropdown-item" href="javascript:;">Another action</a></li>
+                      <li><a class="dropdown-item" href="javascript:;">Something else here</a></li>
+                    </ul>
+                  </div>
+               </div>
+               <div class="d-flex align-items-center justify-content-between mt-3">
+                  <div class="">
+                    <h4 class="mb-0 fw-bold">$9627.20</h4>
+                    <div class="d-flex align-items-center justify-content-start gap-1 text-success mt-3">
+                      <span class="material-icons-outlined fs-6">north</span>
+                      <p class="mb-0 fs-6">5.6%</p>
+                    </div>
+                  </div>
+                  <div id="chart2"></div>
+               </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card border-danger border-bottom rounded-4">
+            <div class="card-body">
+               <div class="d-flex align-items-center justify-content-between">
+                  <p class="mb-0 fs-6">Product Views</p>
+                  <div class="dropdown">
+                    <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle"
+                      data-bs-toggle="dropdown">
+                      <span class="material-icons-outlined fs-5">more_vert</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="javascript:;">Action</a></li>
+                      <li><a class="dropdown-item" href="javascript:;">Another action</a></li>
+                      <li><a class="dropdown-item" href="javascript:;">Something else here</a></li>
+                    </ul>
+                  </div>
+               </div>
+               <div class="d-flex align-items-center justify-content-between mt-3">
+                  <div class="">
+                    <h4 class="mb-0 fw-bold">65.7K</h4>
+                    <div class="d-flex align-items-center justify-content-start gap-1 text-success mt-3">
+                      <span class="material-icons-outlined fs-6">north</span>
+                      <p class="mb-0 fs-6">5.6%</p>
+                    </div>
+                  </div>
+                  <div id="chart3"></div>
+               </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card border-warning border-bottom rounded-4">
+            <div class="card-body">
+               <div class="d-flex align-items-center justify-content-between">
+                  <p class="mb-0 fs-6">New Accouts</p>
+                  <div class="dropdown">
+                    <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle"
+                      data-bs-toggle="dropdown">
+                      <span class="material-icons-outlined fs-5">more_vert</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="javascript:;">Action</a></li>
+                      <li><a class="dropdown-item" href="javascript:;">Another action</a></li>
+                      <li><a class="dropdown-item" href="javascript:;">Something else here</a></li>
+                    </ul>
+                  </div>
+               </div>
+               <div class="d-flex align-items-center justify-content-between mt-3">
+                  <div class="">
+                    <h4 class="mb-0 fw-bold">2497</h4>
+                    <div class="d-flex align-items-center justify-content-start gap-1 text-success mt-3">
+                      <span class="material-icons-outlined fs-6">north</span>
+                      <p class="mb-0 fs-6">5.6%</p>
+                    </div>
+                  </div>
+                  <div id="chart4"></div>
+               </div>
+            </div>
+          </div>
+        </div>
+      </div><!--end row-->
+
+
+      <div class="row">
+        <div class="col-12 col-xl-6">
+          <div class="card rounded-4">
+            <div class="card-body">
+              <div id="chart5" class="mb-4"></div>
+              <h4 class="mb-0">Total Earning</h4>
+              <div class="d-flex align-items-center gap-4 mt-0">
+                <div class="">
+                  <h1 class="mb-0">36.7%</h1>
+                </div>
+                <div class="d-flex align-items-center align-self-end gap-2">
+                  <span class="material-icons-outlined text-success">trending_up</span>
+                  <p class="mb-0 text-success">34.5%</p>
+                </div>
+              </div>
+              <p class="mb-5">Compare to last year</p>
+              <div class="d-flex flex-column gap-3">
+                <div class="d-flex align-items-center gap-3">
+                  <p class="mb-0 d-flex align-items-center gap-2 w-25"><span
+                      class="material-icons-outlined fs-6 text-primary">fiber_manual_record</span>Sales</p>
+                  <div class="progress w-100" style="height: 5px;">
+                    <div class="progress-bar bg-primary" style="width: 65%"></div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                  <p class="mb-0 d-flex align-items-center gap-2 w-25"><span
+                      class="material-icons-outlined fs-6 text-danger">fiber_manual_record</span>Product</p>
+                  <div class="progress w-100" style="height: 5px;">
+                    <div class="progress-bar bg-danger" style="width: 65%"></div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                  <p class="mb-0 d-flex align-items-center gap-2 w-25"><span
+                      class="material-icons-outlined fs-6 text-success">fiber_manual_record</span>Income</p>
+                  <div class="progress w-100" style="height: 5px;">
+                    <div class="progress-bar bg-success" style="width: 65%"></div>
+                  </div>
+                </div>
+               </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-xl-6">
+          <div class="card rounded-4">
+            <div class="card-body">
+              <div id="chart6"></div>
+              <div class="d-flex align-items-start justify-content-around bg-light p-3 rounded-3 mt-3">
+                <div class="">
+                  <p class="mb-1 fs-6 fw-bold">Monthly</p>
+                  <h2 class="mb-0">65,127</h2>
+                  <p class="mb-0"><span class="text-success me-2 fw-medium">16.5%</span><span>55.21 USD</span></p>
+                </div>
+                <div class="vr"></div>
+                <div class="">
+                  <p class="mb-1 fs-6 fw-bold">Yearly</p>
+                  <h2 class="mb-0">984,246</h2>
+                  <p class="mb-0"><span class="text-success me-2 fw-medium">24.9%</span><span>267.35 USD</span></p>
+                </div>
+              </div>
+
+              <div class="d-flex flex-column mt-3">
+                <div class="d-flex align-items-center justify-content-between">
+                  <p class="mb-0">Los Angeles</p>
+                  <p class="mb-0 fw-bold">301,548</p>
+                </div>
+                <hr>
+                <div class="d-flex align-items-center justify-content-between">
+                  <p class="mb-0">New York</p>
+                  <p class="mb-0 fw-bold">987,457</p>
+                </div>
+                <hr>
+                <div class="d-flex align-items-center justify-content-between">
+                  <p class="mb-0">Canada</p>
+                  <p class="mb-0 fw-bold">249,124</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!--end row-->
+
+
+      <div class="row">
+        <div class="col-12 col-xl-4 d-flex">
+          <div class="card w-100 rounded-4">
+            <div class="card-header p-3 bg-transparent">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="">
+                  <h5 class="mb-0">Country Sales</h5>
+                </div>
+                <div class="dropdown">
+                  <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle" data-bs-toggle="dropdown">
+                    <span class="material-icons-outlined fs-5">more_vert</span>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Action</a></li>
+                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+             <div class="card-body">
+                <div class="d-flex flex-column gap-4">
+                   <div class="d-flex align-items-center gap-3">
+                     <div class="d-flex align-items-center gap-3 flex-grow-1 flex-shrink-0">
+                         <img src="{% static 'assets/images/county/01.png' %}" width="40" alt="">
+                         <div class="">
+                            <h5 class="mb-0">$95,256</h5>
+                            <p class="mb-0">Canada</p>
+                         </div>
+                     </div>
+                     <div class="progress w-25" style="height: 7px;">
+                        <div class="progress-bar" style="width: 65%"></div>
+                     </div>
+                     <div class="">
+                      <p class="mb-0 fs-5">68%</p>
+                     </div>
+                   </div>
+                   <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-3 flex-grow-1 flex-shrink-0">
+                        <img src="{% static 'assets/images/county/02.png' %}" width="40" alt="">
+                        <div class="">
+                           <h5 class="mb-0">$75M</h5>
+                           <p class="mb-0">United Kingdom</p>
+                        </div>
+                    </div>
+                    <div class="progress w-25" style="height: 7px;">
+                       <div class="progress-bar" style="width: 55%"></div>
+                    </div>
+                    <div class="">
+                     <p class="mb-0 fs-5">57%</p>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-3 flex-grow-1 flex-shrink-0">
+                        <img src="{% static 'assets/images/county/03.png' %}" width="40" alt="">
+                        <div class="">
+                           <h5 class="mb-0">$958K</h5>
+                           <p class="mb-0">France</p>
+                        </div>
+                    </div>
+                    <div class="progress w-25" style="height: 7px;">
+                       <div class="progress-bar" style="width: 48%"></div>
+                    </div>
+                    <div class="">
+                     <p class="mb-0 fs-5">48%</p>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-3 flex-grow-1 flex-shrink-0">
+                        <img src="{% static 'assets/images/county/04.png' %}" width="40" alt="">
+                        <div class="">
+                           <h5 class="mb-0">$568K</h5>
+                           <p class="mb-0">Brazil</p>
+                        </div>
+                    </div>
+                    <div class="progress w-25" style="height: 7px;">
+                       <div class="progress-bar" style="width: 75%"></div>
+                    </div>
+                    <div class="">
+                     <p class="mb-0 fs-5">38%</p>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-3 flex-grow-1 flex-shrink-0">
+                        <img src="{% static 'assets/images/county/05.png' %}" width="40" alt="">
+                        <div class="">
+                           <h5 class="mb-0">$855K</h5>
+                           <p class="mb-0">United Kingdom</p>
+                        </div>
+                    </div>
+                    <div class="progress w-25" style="height: 7px;">
+                       <div class="progress-bar" style="width: 65%"></div>
+                    </div>
+                    <div class="">
+                     <p class="mb-0 fs-5">68%</p>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-3 flex-grow-1 flex-shrink-0">
+                        <img src="{% static 'assets/images/county/06.png' %}" width="40" alt="">
+                        <div class="">
+                           <h5 class="mb-0">$983K</h5>
+                           <p class="mb-0">United States</p>
+                        </div>
+                    </div>
+                    <div class="progress w-25" style="height: 7px;">
+                       <div class="progress-bar" style="width: 88%"></div>
+                    </div>
+                    <div class="">
+                     <p class="mb-0 fs-5">88%</p>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-3 flex-grow-1 flex-shrink-0">
+                        <img src="{% static 'assets/images/county/07.png' %}" width="40" alt="">
+                        <div class="">
+                           <h5 class="mb-0">$724K</h5>
+                           <p class="mb-0">China</p>
+                        </div>
+                    </div>
+                    <div class="progress w-25" style="height: 7px;">
+                       <div class="progress-bar" style="width: 80%"></div>
+                    </div>
+                    <div class="">
+                     <p class="mb-0 fs-5">85%</p>
+                    </div>
+                  </div>
+                </div>
+             </div>
+           </div>
+        </div>
+        <div class="col-12 col-xl-4 d-flex">
+          <div class="card w-100 rounded-4">
+            <div class="card-header p-3 bg-transparent">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="">
+                  <h5 class="mb-0">Income / Expense</h5>
+                </div>
+                <div class="dropdown">
+                  <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle" data-bs-toggle="dropdown">
+                    <span class="material-icons-outlined fs-5">more_vert</span>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Action</a></li>
+                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="payments-list">
+                <div class="d-flex flex-column gap-4">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="wh-48 d-flex align-items-center justify-content-center rounded-circle border">
+                      <img src="{% static 'assets/images/apps/11.png' %}" width="30" alt="">
+                    </div>
+                    <div class="flex-grow-1">
+                      <h5 class="mb-0">$4856</h5>
+                      <p class="mb-0">Paypal</p>
+                    </div>
+                    <div class="d-flex align-items-center gap-1 text-success">
+                      <span class="material-icons-outlined">expand_less</span>
+                      <span>28.5%</span>
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="wh-48 d-flex align-items-center justify-content-center rounded-circle border">
+                      <img src="{% static 'assets/images/apps/10.png' %}" width="30" alt="">
+                    </div>
+                    <div class="flex-grow-1">
+                      <h5 class="mb-0">$1286</h5>
+                      <p class="mb-0 fs-6">Figma </p>
+                    </div>
+                    <div class="d-flex align-items-center gap-1 text-success">
+                      <span class="material-icons-outlined">expand_less</span>
+                      <span>12.4%</span>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="wh-48 d-flex align-items-center justify-content-center rounded-circle border">
+                      <img src="{% static 'assets/images/apps/13.png' %}" width="30" alt="">
+                    </div>
+                    <div class="flex-grow-1">
+                      <h5 class="mb-0">$9946</h5>
+                      <p class="mb-0 fs-6">Visa Card</p>
+                    </div>
+                    <div class="d-flex align-items-center gap-1 text-danger">
+                      <span class="material-icons-outlined">expand_less</span>
+                      <span>18.5%</span>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="wh-48 d-flex align-items-center justify-content-center rounded-circle border">
+                      <img src="{% static 'assets/images/apps/01.png' %}" width="30" alt="">
+                    </div>
+                    <div class="flex-grow-1">
+                      <h5 class="mb-0">$4376</h5>
+                      <p class="mb-0 fs-6">Gmail</p>
+                    </div>
+                    <div class="d-flex align-items-center gap-1 text-success">
+                      <span class="material-icons-outlined">expand_less</span>
+                      <span>32.8%</span>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="wh-48 d-flex align-items-center justify-content-center rounded-circle border">
+                      <img src="{% static 'assets/images/apps/02.png' %}" width="30" alt="">
+                    </div>
+                    <div class="flex-grow-1">
+                      <h5 class="mb-0">$6674</h5>
+                      <p class="mb-0 fs-6">Skype</p>
+                    </div>
+                    <div class="d-flex align-items-center gap-1 text-danger">
+                      <span class="material-icons-outlined">expand_less</span>
+                      <span>27.8%</span>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="wh-48 d-flex align-items-center justify-content-center rounded-circle border">
+                      <img src="{% static 'assets/images/apps/06.png' %}" width="30" alt="">
+                    </div>
+                    <div class="flex-grow-1">
+                      <h5 class="mb-0">$3489</h5>
+                      <p class="mb-0 fs-6">Instagram</p>
+                    </div>
+                    <div class="d-flex align-items-center gap-1 text-success">
+                      <span class="material-icons-outlined">expand_less</span>
+                      <span>10.2%</span>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="wh-48 d-flex align-items-center justify-content-center rounded-circle border">
+                      <img src="{% static 'assets/images/apps/04.png' %}" width="30" alt="">
+                    </div>
+                    <div class="flex-grow-1">
+                      <h5 class="mb-0">$5578</h5>
+                      <p class="mb-0 fs-6">Youtube</p>
+                    </div>
+                    <div class="d-flex align-items-center gap-1 text-success">
+                      <span class="material-icons-outlined">expand_less</span>
+                      <span>37.2%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-xl-4 d-flex">
+          <div class="card w-100 rounded-4">
+            <div class="card-header p-3 bg-transparent">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="">
+                  <h5 class="mb-0">Popular Products</h5>
+                </div>
+                <div class="dropdown">
+                  <a href="javascript:;" class="dropdown-toggle-nocaret options dropdown-toggle" data-bs-toggle="dropdown">
+                    <span class="material-icons-outlined fs-5">more_vert</span>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="javascript::">Action</a></li>
+                    <li><a class="dropdown-item" href="javascript::">Another action</a></li>
+                    <li><a class="dropdown-item" href="javascript::">Something else here</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="d-flex flex-column gap-3">
+                <div class="d-flex align-items-center gap-3">
+                  <img src="{% static 'assets/images/top-products/01.png' %}" width="55" alt="">
+                  <div class="flex-grow-1">
+                    <h6 class="mb-0">Apple Hand Watch</h6>
+                    <p class="mb-0">Sale: 258</p>
+                  </div>
+                  <div class="">
+                    <h5 class="mb-0">$199</h5>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                  <img src="{% static 'assets/images/top-products/02.png' %}" width="55" alt="">
+                  <div class="flex-grow-1">
+                    <h6 class="mb-0">Mobile Phone Set</h6>
+                    <p class="mb-0">Sale: 169</p>
+                  </div>
+                  <div class="">
+                    <h5 class="mb-0">$159</h5>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                  <img src="{% static 'assets/images/top-products/03.png' %}" width="55" alt="">
+                  <div class="flex-grow-1">
+                    <h6 class="mb-0">Fancy Chair</h6>
+                    <p class="mb-0">Sale: 268</p>
+                  </div>
+                  <div class="">
+                    <h5 class="mb-0">$678</h5>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                  <img src="{% static 'assets/images/top-products/04.png' %}" width="55" alt="">
+                  <div class="flex-grow-1">
+                    <h6 class="mb-0">Blue Shoes Pair</h6>
+                    <p class="mb-0">Sale: 859</p>
+                  </div>
+                  <div class="">
+                    <h5 class="mb-0">$279</h5>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                  <img src="{% static 'assets/images/top-products/05.png' %}" width="55" alt="">
+                  <div class="flex-grow-1">
+                    <h6 class="mb-0">Blue Yoga Mat</h6>
+                    <p class="mb-0">Sale: 328</p>
+                  </div>
+                  <div class="">
+                    <h5 class="mb-0">$389</h5>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                  <img src="{% static 'assets/images/top-products/06.png' %}" width="55" alt="">
+                  <div class="flex-grow-1">
+                    <h6 class="mb-0">White water Bottle</h6>
+                    <p class="mb-0">Sale: 992</p>
+                  </div>
+                  <div class="">
+                    <h5 class="mb-0">$584</h5>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                  <img src="{% static 'assets/images/top-products/07.png' %}" width="55" alt="">
+                  <div class="flex-grow-1">
+                    <h6 class="mb-0">Laptop Full HD</h6>
+                    <p class="mb-0">Sale: 489</p>
+                  </div>
+                  <div class="">
+                    <h5 class="mb-0">$398</h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!--end row-->
+
+    </div>
+  </main>
+  {% endblock data_breadcrumb %}
+  <!--end main wrapper-->
+
+  {% block body %}  
   {% endblock %}
-
+  
   {% block view %}
   {% endblock %}
 
+  <!--start overlay-->
+  <div class="overlay btn-toggle"></div>
+  <!--end overlay-->
+
+  <!--start footer-->
+  <footer class="page-footer">
+    <p class="mb-0">Copyright © 2024. All right reserved.</p>
+  </footer>
+  <!--top footer-->
+
+  <!--start cart-->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCart">
+    <div class="offcanvas-header border-bottom h-70 justify-content-between">
+      <h5 class="mb-0" id="offcanvasRightLabel">8 New Orders</h5>
+      <a href="javascript:;" class="primaery-menu-close" data-bs-dismiss="offcanvas">
+        <i class="material-icons-outlined">close</i>
+      </a>
+    </div>
+    <div class="offcanvas-body p-0">
+      <div class="order-list">
+        <div class="order-item d-flex align-items-center gap-3 p-3 border-bottom">
+          <div class="order-img">
+            <img src="{% static 'assets/images/orders/01.png' %}" class="img-fluid rounded-3" width="75" alt="">
+          </div>
+          <div class="order-info flex-grow-1">
+            <h5 class="mb-1 order-title">White Men Shoes</h5>
+            <p class="mb-0 order-price">$289</p>
+          </div>
+          <div class="d-flex">
+            <a class="order-delete"><span class="material-icons-outlined">delete</span></a>
+            <a class="order-delete"><span class="material-icons-outlined">visibility</span></a>
+          </div>
+        </div>
+
+        <div class="order-item d-flex align-items-center gap-3 p-3 border-bottom">
+          <div class="order-img">
+            <img src="{% static 'assets/images/orders/02.png' %}" class="img-fluid rounded-3" width="75" alt="">
+          </div>
+          <div class="order-info flex-grow-1">
+            <h5 class="mb-1 order-title">Red Airpods</h5>
+            <p class="mb-0 order-price">$149</p>
+          </div>
+          <div class="d-flex">
+            <a class="order-delete"><span class="material-icons-outlined">delete</span></a>
+            <a class="order-delete"><span class="material-icons-outlined">visibility</span></a>
+          </div>
+        </div>
+
+        <div class="order-item d-flex align-items-center gap-3 p-3 border-bottom">
+          <div class="order-img">
+            <img src="{% static 'assets/images/orders/03.png' %}" class="img-fluid rounded-3" width="75" alt="">
+          </div>
+          <div class="order-info flex-grow-1">
+            <h5 class="mb-1 order-title">Men Polo Tshirt</h5>
+            <p class="mb-0 order-price">$139</p>
+          </div>
+          <div class="d-flex">
+            <a class="order-delete"><span class="material-icons-outlined">delete</span></a>
+            <a class="order-delete"><span class="material-icons-outlined">visibility</span></a>
+          </div>
+        </div>
+
+        <div class="order-item d-flex align-items-center gap-3 p-3 border-bottom">
+          <div class="order-img">
+            <img src="{% static 'assets/images/orders/04.png' %}" class="img-fluid rounded-3" width="75" alt="">
+          </div>
+          <div class="order-info flex-grow-1">
+            <h5 class="mb-1 order-title">Blue Jeans Casual</h5>
+            <p class="mb-0 order-price">$485</p>
+          </div>
+          <div class="d-flex">
+            <a class="order-delete"><span class="material-icons-outlined">delete</span></a>
+            <a class="order-delete"><span class="material-icons-outlined">visibility</span></a>
+          </div>
+        </div>
+
+        <div class="order-item d-flex align-items-center gap-3 p-3 border-bottom">
+          <div class="order-img">
+            <img src="{% static 'assets/images/orders/05.png' %}" class="img-fluid rounded-3" width="75" alt="">
+          </div>
+          <div class="order-info flex-grow-1">
+            <h5 class="mb-1 order-title">Fancy Shirts</h5>
+            <p class="mb-0 order-price">$758</p>
+          </div>
+          <div class="d-flex">
+            <a class="order-delete"><span class="material-icons-outlined">delete</span></a>
+            <a class="order-delete"><span class="material-icons-outlined">visibility</span></a>
+          </div>
+        </div>
+
+        <div class="order-item d-flex align-items-center gap-3 p-3 border-bottom">
+          <div class="order-img">
+            <img src="{% static 'assets/images/orders/06.png' %}" class="img-fluid rounded-3" width="75" alt="">
+          </div>
+          <div class="order-info flex-grow-1">
+            <h5 class="mb-1 order-title">Home Sofa Set </h5>
+            <p class="mb-0 order-price">$546</p>
+          </div>
+          <div class="d-flex">
+            <a class="order-delete"><span class="material-icons-outlined">delete</span></a>
+            <a class="order-delete"><span class="material-icons-outlined">visibility</span></a>
+          </div>
+        </div>
+
+        <div class="order-item d-flex align-items-center gap-3 p-3 border-bottom">
+          <div class="order-img">
+            <img src="{% static 'assets/images/orders/07.png' %}" class="img-fluid rounded-3" width="75" alt="">
+          </div>
+          <div class="order-info flex-grow-1">
+            <h5 class="mb-1 order-title">Black iPhone</h5>
+            <p class="mb-0 order-price">$1049</p>
+          </div>
+          <div class="d-flex">
+            <a class="order-delete"><span class="material-icons-outlined">delete</span></a>
+            <a class="order-delete"><span class="material-icons-outlined">visibility</span></a>
+          </div>
+        </div>
+
+        <div class="order-item d-flex align-items-center gap-3 p-3 border-bottom">
+          <div class="order-img">
+            <img src="{% static 'assets/images/orders/08.png' %}" class="img-fluid rounded-3" width="75" alt="">
+          </div>
+          <div class="order-info flex-grow-1">
+            <h5 class="mb-1 order-title">Goldan Watch</h5>
+            <p class="mb-0 order-price">$689</p>
+          </div>
+          <div class="d-flex">
+            <a class="order-delete"><span class="material-icons-outlined">delete</span></a>
+            <a class="order-delete"><span class="material-icons-outlined">visibility</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="offcanvas-footer h-70 p-3 border-top">
+      <div class="d-grid">
+        <button type="button" class="btn btn-dark" data-bs-dismiss="offcanvas">View Products</button>
+      </div>
+    </div>
+  </div>
+  <!--end cart-->
+
+  <!--start switcher-->
+  <button class="btn btn-primary position-fixed bottom-0 end-0 m-3 d-flex align-items-center gap-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop">
+    <i class="material-icons-outlined">tune</i>Customize
+  </button>
   
-  {% block body %}  
-  {% endblock %}
+  <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="staticBackdrop">
+    <div class="offcanvas-header border-bottom h-70 justify-content-between">
+      <div class="">
+        <h5 class="mb-0">Theme Customizer</h5>
+        <p class="mb-0">Customize your theme</p>
+      </div>
+      <a href="javascript:;" class="primaery-menu-close" data-bs-dismiss="offcanvas">
+        <i class="material-icons-outlined">close</i>
+      </a>
+    </div>
+    <div class="offcanvas-body">
+      <div>
+        <p>Theme variation</p>
 
+        <div class="row g-3">
+          <div class="col-12 col-xl-6">
+            <input type="radio" class="btn-check" name="theme-options" id="LightTheme" checked>
+            <label class="btn btn-outline-secondary d-flex flex-column gap-1 align-items-center justify-content-center p-4" for="LightTheme">
+              <span class="material-icons-outlined">light_mode</span>
+              <span>Light</span>
+            </label>
+          </div>
+          <div class="col-12 col-xl-6">
+            <input type="radio" class="btn-check" name="theme-options" id="DarkTheme">
+            <label class="btn btn-outline-secondary d-flex flex-column gap-1 align-items-center justify-content-center p-4" for="DarkTheme">
+              <span class="material-icons-outlined">dark_mode</span>
+              <span>Dark</span>
+            </label>
+          </div>
+          <div class="col-12 col-xl-6">
+            <input type="radio" class="btn-check" name="theme-options" id="SemiDarkTheme">
+            <label class="btn btn-outline-secondary d-flex flex-column gap-1 align-items-center justify-content-center p-4" for="SemiDarkTheme">
+              <span class="material-icons-outlined">contrast</span>
+              <span>Semi Dark</span>
+            </label>
+          </div>
+          <div class="col-12 col-xl-6">
+            <input type="radio" class="btn-check" name="theme-options" id="BoderedTheme">
+            <label class="btn btn-outline-secondary d-flex flex-column gap-1 align-items-center justify-content-center p-4" for="BoderedTheme">
+              <span class="material-icons-outlined">border_style</span>
+              <span>Bordered</span>
+            </label>
+          </div>
+        </div><!--end row-->
 
- 
+      </div>
+    </div>
+  </div>
+  <!--start switcher-->
 
-  <!-- partial -->
-  <script>
-    const body = document.querySelector("body"),
-    sidebar = body.querySelector("nav"),
-    toggle = body.querySelector(".toggle"),
-    searchBtn = body.querySelector(".search-box"),
-    modeSwitch = body.querySelector(".toggle-switch"),
-    modeText = body.querySelector(".mode-text");
-  
-  toggle.addEventListener("click", () => {
-    sidebar.classList.toggle("close");
-  });
-  
-  searchBtn.addEventListener("click", () => {
-    sidebar.classList.remove("close");
-  });
-  
-  modeSwitch.addEventListener("click", () => {
-    body.classList.toggle("dark");
-  
-    if (body.classList.contains("dark")) {
-      modeText.innerText = "Light mode";
-    } else {
-      modeText.innerText = "Dark mode";
-    }
-  });
-  </script>
+  <!--bootstrap js-->
+  <script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
 
-  
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8/dist/sweetalert2.min.js"></script>
-
-<script>
-  // Sweet alert
-  {% for message in messages %}
-  {% if message.level == 20 %}
-      var swal_type = 'info';
-  {% elif message.level == 25 %}
-      var swal_type = 'success';
-  {% elif message.level == 30 %}
-      var swal_type = 'warning';
-  {% elif message.level == 40 %}
-      var swal_type = 'error';
-  {% endif %}
-
-  Swal.fire({
-      position: 'top-end',
-      type: swal_type,
-      title: '{{ message }}',
-      showConfirmButton: false,
-      timer: 2000,
-  })
-  {% endfor %}
-</script>
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <!--plugins-->
+  <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+  <!--plugins-->
+  <script src="{% static 'assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js' %}"></script>
+  <script src="{% static 'assets/plugins/metismenu/metisMenu.min.js' %}"></script>
+  <script src="{% static 'assets/plugins/apexchart/apexcharts.min.js' %}"></script>
+  <script src="{% static 'assets/plugins/simplebar/js/simplebar.min.js' %}"></script>
+  <script src="{% static 'assets/js/index2.js' %}"></script>
+  <script src="{% static 'assets/js/main.js' %}"></script>
 
 </body>
+
 </html>

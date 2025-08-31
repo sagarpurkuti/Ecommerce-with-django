@@ -1,0 +1,138 @@
+
+{% extends 'vendor/admin_base.html' %}
+
+{% block title %}
+Seller Dashboard
+{% endblock title %}
+
+{% block view %}
+
+
+<section class="home">
+
+    <div class="text">Welcome {{request.account.first_name}}</div>
+      
+
+    <!-- Add deal container -->
+    <div class="container">
+        <a href="{%  url 'add_product' %}">
+            <button class="add-deal-button">ADD Products</button>
+        </a>
+    </div>
+
+
+
+      <h1 class="text" style="margin-left: 20px;">Products List:</h1>
+      
+      <div class="table-responsive">
+
+
+        <form class="mb-4">
+          <div class="row mx-3">
+            <div class="col-md-3">
+              <div class="input-group">
+                <!-- Search Input-->
+                <input class="form-control" id="searchInput" name="search" value="{{ request.GET.search }}" placeholder="Search">
+                <!-- Microphone Button -->
+                <button type="button" id="micButton" class="btn btn-secondary">
+                  <i class="bi bi-mic"></i> <!-- Bootstrap mic icon -->
+                </button>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <!-- Search Button -->
+              <button id="searchButton" class="btn btn-success">Search</button>
+            </div>
+          </div>
+        </form>
+        
+        {% comment %} <script>
+          // JavaScript for Speech-to-Text Integration
+          const micButton = document.getElementById("micButton");
+          const searchInput = document.getElementById("searchInput");
+          const searchButton = document.getElementById("searchButton");
+        
+          micButton.addEventListener("click", () => {
+            if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
+              // Initialize speech recognition
+              const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+              const recognition = new SpeechRecognition();
+        
+              recognition.lang = "en-US"; // Set language
+              recognition.interimResults = false; // Don't show interim results
+              recognition.maxAlternatives = 1; // Max alternatives for recognition
+        
+              recognition.start();
+        
+              recognition.onresult = (event) => {
+                let speechResult = event.results[0][0].transcript; // Get the transcribed text
+                speechResult = speechResult.replace(/\.$/, ""); // Remove trailing period if present
+                searchInput.value = speechResult; // Set the text in the search input
+                searchButton.click(); // Trigger the search button programmatically
+              };
+        
+              recognition.onerror = (event) => {
+                console.error("Speech recognition error:", event.error);
+              };
+        
+              recognition.onend = () => {
+                console.log("Speech recognition ended.");
+              };
+            } else {
+              alert("Speech Recognition is not supported in your browser.");
+            }
+          });
+        </script> {% endcomment %}
+        
+        
+        <table>
+            <tr>
+                <th>Images</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Actions</th>
+            </tr>
+            {% for product in products %}
+            <tr>
+                <td><img class="deal-image" src="{{product.images.url}}" height="100px" width="100px"></td>
+                <td>{{product.product_name}}</td>
+                <td>{{product.category}}</td>
+                <td>{{product.description}}</td>
+                <td>{{product.price}}</td>
+                <td>{{product.stock}}</td>
+                <td>
+                  <!-- Edit button -->
+                  <a href="{% url 'edit_product' product.id %}" class="ssssaction-btn edit-btn" id="editButton">Edit</a>
+                  <!-- Delete button -->
+                  <a href="{% url 'delete_product' product.id %}" class="action-btn delete-btn">Delete</a>
+                </td>
+                
+            </tr>
+            {% endfor %}
+            
+        </table>
+      </div> 
+
+
+
+
+</section>
+{% endblock view %}
+
+
+
+  
+
+  
+
+
+
+
+
+
+
+
+

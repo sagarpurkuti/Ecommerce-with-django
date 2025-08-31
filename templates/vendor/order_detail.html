@@ -2,161 +2,415 @@
 {% extends 'vendor/admin_base.html' %}
 
 {% block title %}
-Seller Dashboard
+Order Details
 {% endblock title %}
 
-{% block view %}
+{% block style %}
 <style>
-    .add-deal-button {
-        background-color: #4CAF50;
-        border: none;
+    .form-label {
+        margin-left: 3rem;  
+    }
+    .form-control, .form-select {
+        border-radius: 0.5rem;
+    }
+    .card {
+        border-radius: 1rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+    .table {
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+    .table th {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+        font-weight: 600;
+        color: #495057;
+    }
+    .table td {
+        vertical-align: middle;
+    }
+    .status-badge {
+        padding: 0.375rem 0.75rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    .status-pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    .status-confirmed {
+        background-color: #d1ecf1;
+        color: #0c5460;
+    }
+    .status-shipped {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .status-delivered {
+        background-color: #d1e7dd;
+        color: #0f5132;
+    }
+    .status-cancelled {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    .invoice-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
-        padding: 10px 20px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 5px;
+        padding: 2rem;
+        border-radius: 1rem 1rem 0 0;
     }
-    .container{
-        text-align: right;
-        margin-top: 20px;
+    .customer-info {
+        background-color: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        border-left: 4px solid #0d6efd;
     }
-    
-    table {
-              width: 100%;
-              border-collapse: collapse;
-              margin-left: 20px;
-            }
-
-            th, td {
-              padding: 15px;
-              text-align: left;
-              border-bottom: 1px solid #ddd;
-            }
-
-            th {
-              background-color: #99bde4; /* Blue */
-              color: black;
-              border-radius: 2px;
-            }
-
-            tr:hover {
-              background-color: #f2f2f2; /* Light gray */
-            }
-
+    .order-summary {
+        background-color: #e3f2fd;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        border-left: 4px solid #2196f3;
+    }
+    .product-variation {
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-top: 0.25rem;
+    }
+    .total-row {
+        background-color: #f8f9fa;
+        font-weight: 600;
+    }
+    .grand-total-row {
+        background-color: #e3f2fd;
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
 </style>
+{% endblock %}
 
-<section class="home">
+{% block data_breadcrumb %}
+{% endblock data_breadcrumb %}
 
-    {% comment %} <div class="text">Customer Orders</div> {% endcomment %}
-      
-
-
-
-      <h1 class="text" style="margin-left: 20px;">Order Detail</h1>
-      
-    <div class="table-responsive">
-
-        <!-- col-lg-6 end here -->
-        <div class="col-lg-12">
-
-
-            
-            <div class="invoice-items">
-                <div class="table-responsive" style="overflow: hidden; outline: none;" tabindex="0">
-                    <div class="invoice-details mt-25">
-                        <div class="well">
-                            <div class="invoice-from">
-                                <ul class="list-unstyled text-right">
-                                    <li><strong>Invoiced To</strong></li>
-                                    <li>{{order.full_name}}</li>
-                                    <li>{{order.full_address}} </li>
-                                    <li>{{order.city}}, {{order.state}} </li>
-                                    <li>{{order.country}}</li>
-                                </ul>
-                            </div>
-                            <ul class="list-unstyled mb0">
-                                <li><strong>Order No:</strong> {{order.order_number}}</li>
-                                <li><strong>Transaction ID:</strong> {{order.payment.payment_id}}</li>
-                                <li><strong>Order Date:</strong> {{order.created_at}}</li>
-                                <li><strong>Payment Status:</strong> {{order.payment.status}}</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th class="per70 text-center">Product</th>
-                                <th class="per5 text-center">Qty</th>
-                                <th class="per25 text-center">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in order_detail %}
-                            <tr>
-                                <td>{{item.product.product_name}}
-                                <p class="text-muted small">
-                                    {% if item.variation.all %}
-                                        {% for i in item.variation.all %}
-                                            {{ i.variation_category | capfirst }}:{{ i.variation_value | capfirst }}<br>
-                                        {% endfor %}
-                                    {% endif %}
-                                
-                                </p>
-                                </td>
-                                <td class="text-center">{{item.quantity}}</td>
-                                <td class="text-center">Rs.{{item.product_price}}</td>
-                            </tr> 
-                            {% endfor %}
-
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th colspan="2" class="text-right">Sub Total:</th>
-                                <th class="text-center">Rs.{{subtotal}}</th>
-                            </tr>
-                            <tr>
-                                <th colspan="2" class="text-right">Tax:</th>
-                                <th class="text-center">Rs.{{order.tax}}</th>
-                            </tr>
-                            
-                            <tr>
-                                <th colspan="2" class="text-right">Grand Total:</th>
-                                <th class="text-center">Rs.{{order.order_total}}</th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-            <form method="POST" style="margin-top: 20px;">
-                {% csrf_token %}
-                <div class="form-group row">
-                    <label for="status" class="col-sm-2 col-form-label"><strong>Update Order Status:</strong></label>
-                    <div class="col-sm-4">
-                        <select name="status" id="status" class="form-control">
-                            {% for key, value in order.STATUS %}
-                                <option value="{{ key }}" {% if order.status == key %}selected{% endif %}>{{ value }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-sm-2">
-                        <button type="submit" class="btn btn-primary">Update</button>
-                    </div>
-                </div>
-            </form>
+{% block view %}
+  <!--start main wrapper-->
+  <main class="main-wrapper">
+    <div class="main-content">
+      <!--breadcrumb-->
+      <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+        <div class="breadcrumb-title pe-3">Orders</div>
+        <div class="ps-3">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 p-0">
+              <li class="breadcrumb-item"><a href="{% url 'admin_panel' %}"><i class="bx bx-home-alt"></i></a>
+              </li>
+              <li class="breadcrumb-item"><a href="{% url 'orders' %}">Orders</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Order #{{order.order_number}}</li>
+            </ol>
+          </nav>
         </div>
-        <!-- col-lg-12 end here -->
-    </div> 
+        <div class="ms-auto">
+          <div class="btn-group">
+            <a href="{% url 'orders' %}" class="btn btn-secondary">
+              <i class="bi bi-arrow-left me-2"></i>Back to Orders
+            </a>
+            <button class="btn btn-primary" onclick="window.print()">
+              <i class="bi bi-printer me-2"></i>Print Invoice
+            </button>
+          </div>
+        </div>
+      </div>
+      <!--end breadcrumb-->
 
+      <div class="row">
+        <div class="col-12 col-lg-8">
+          <!-- Order Invoice -->
+          <div class="card">
+            <div class="invoice-header">
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <h4 class="mb-1">Order Invoice</h4>
+                  <p class="mb-0 opacity-75">Order #{{order.order_number}}</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                  <h5 class="mb-1">Order Status</h5>
+                  {% if order.status == 'Pending' %}
+                    <span class="status-badge status-pending">{{order.status}}</span>
+                  {% elif order.status == 'Confirmed' %}
+                    <span class="status-badge status-confirmed">{{order.status}}</span>
+                  {% elif order.status == 'Shipped' %}
+                    <span class="status-badge status-shipped">{{order.status}}</span>
+                  {% elif order.status == 'Delivered' %}
+                    <span class="status-badge status-delivered">{{order.status}}</span>
+                  {% elif order.status == 'Cancelled' %}
+                    <span class="status-badge status-cancelled">{{order.status}}</span>
+                  {% else %}
+                    <span class="status-badge status-pending">{{order.status}}</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            
+            <div class="card-body">
+              <!-- Customer Information -->
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="customer-info">
+                    <h6 class="mb-3 text-primary">
+                      <i class="bi bi-person me-2"></i>Customer Information
+                    </h6>
+                    <ul class="list-unstyled mb-0">
+                      <li><strong>{{order.full_name}}</strong></li>
+                      <li>{{order.full_address}}</li>
+                      <li>{{order.city}}, {{order.state}}</li>
+                      <li>{{order.country}}</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="order-summary">
+                    <h6 class="mb-3 text-primary">
+                      <i class="bi bi-receipt me-2"></i>Order Summary
+                    </h6>
+                    <ul class="list-unstyled mb-0">
+                      <li><strong>Order No:</strong> {{order.order_number}}</li>
+                      <li><strong>Transaction ID:</strong> {{order.payment.payment_id}}</li>
+                      <li><strong>Order Date:</strong> {{order.created_at|date:"M d, Y"}}</li>
+                      <li><strong>Payment Status:</strong> 
+                        <span class="badge bg-{% if order.payment.status == 'COMPLETED' %}success{% else %}warning{% endif %}">
+                          {{order.payment.status}}
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
 
+              <!-- Order Items Table -->
+              <div class="table-responsive">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th class="text-center" style="width: 50%;">Product</th>
+                      <th class="text-center" style="width: 20%;">Qty</th>
+                      <th class="text-center" style="width: 30%;">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in order_detail %}
+                    <tr>
+                      <td>
+                        <div>
+                          <strong>{{item.product.product_name}}</strong>
+                          {% if item.variation.all %}
+                            <div class="product-variation">
+                              {% for i in item.variation.all %}
+                                <span class="badge bg-light text-dark me-1">
+                                  {{ i.variation_category | capfirst }}: {{ i.variation_value | capfirst }}
+                                </span>
+                              {% endfor %}
+                            </div>
+                          {% endif %}
+                        </div>
+                      </td>
+                      <td class="text-center">
+                        <span class="badge bg-primary">{{item.quantity}}</span>
+                      </td>
+                      <td class="text-center">
+                        <strong class="text-primary">Rs.{{item.product_price}}</strong>
+                      </td>
+                    </tr> 
+                    {% endfor %}
+                  </tbody>
+                  <tfoot>
+                    <tr class="total-row">
+                      <th colspan="2" class="text-end">Sub Total:</th>
+                      <th class="text-center">Rs.{{subtotal}}</th>
+                    </tr>
+                    <tr class="total-row">
+                      <th colspan="2" class="text-end">Tax:</th>
+                      <th class="text-center">Rs.{{order.tax}}</th>
+                    </tr>
+                    <tr class="grand-total-row">
+                      <th colspan="2" class="text-end">Grand Total:</th>
+                      <th class="text-center text-primary">Rs.{{order.order_total}}</th>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
 
+        <div class="col-12 col-lg-4">
+          <!-- Update Order Status -->
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title mb-3">
+                <i class="bi bi-gear me-2"></i>Update Order Status
+              </h6>
+              <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                  <label for="status" class="form-label">Order Status</label>
+                  <select name="status" id="status" class="form-select">
+                    {% for key, value in order.STATUS %}
+                      <option value="{{ key }}" {% if order.status == key %}selected{% endif %}>{{ value }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="d-grid">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle me-2"></i>Update Status
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
 
+          <!-- Order Timeline -->
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title mb-3">
+                <i class="bi bi-clock-history me-2"></i>Order Timeline
+              </h6>
+              <div class="timeline">
+                <div class="timeline-item">
+                  <div class="timeline-marker bg-success"></div>
+                  <div class="timeline-content">
+                    <h6 class="mb-1">Order Placed</h6>
+                    <p class="mb-0 text-muted small">{{order.created_at|date:"M d, Y H:i"}}</p>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-marker bg-primary"></div>
+                  <div class="timeline-content">
+                    <h6 class="mb-1">Payment Confirmed</h6>
+                    <p class="mb-0 text-muted small">{{order.created_at|date:"M d, Y H:i"}}</p>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-marker bg-warning"></div>
+                  <div class="timeline-content">
+                    <h6 class="mb-1">Processing</h6>
+                    <p class="mb-0 text-muted small">In progress</p>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-marker bg-info"></div>
+                  <div class="timeline-content">
+                    <h6 class="mb-1">Shipped</h6>
+                    <p class="mb-0 text-muted small">Pending</p>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-marker bg-secondary"></div>
+                  <div class="timeline-content">
+                    <h6 class="mb-1">Delivered</h6>
+                    <p class="mb-0 text-muted small">Pending</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
+          <!-- Quick Actions -->
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title mb-3">
+                <i class="bi bi-lightning me-2"></i>Quick Actions
+              </h6>
+              <div class="d-grid gap-2">
+                <button class="btn btn-outline-primary btn-sm">
+                  <i class="bi bi-envelope me-2"></i>Send Email
+                </button>
+                <button class="btn btn-outline-success btn-sm">
+                  <i class="bi bi-truck me-2"></i>Track Shipment
+                </button>
+                <button class="btn btn-outline-info btn-sm">
+                  <i class="bi bi-chat me-2"></i>Contact Customer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!--end row-->
+    </div>
+  </main>
+  <!--end main wrapper-->
 
-</section>
+  <!-- Success/Error Messages -->
+  {% if messages %}
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          <i class="bi bi-{% if message.tags == 'success' %}check-circle text-success{% elif message.tags == 'error' %}exclamation-triangle text-danger{% else %}info-circle text-info{% endif %} me-2"></i>
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <style>
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0.5rem;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background-color: #e9ecef;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .timeline-marker {
+      position: absolute;
+      left: -1.5rem;
+      top: 0.25rem;
+      width: 1rem;
+      height: 1rem;
+      border-radius: 50%;
+      border: 2px solid white;
+    }
+    .timeline-content {
+      padding-left: 0.5rem;
+    }
+    .timeline-content h6 {
+      margin-bottom: 0.25rem;
+      font-size: 0.875rem;
+    }
+  </style>
+
+  <script>
+    // Auto-hide alerts after 5 seconds
+    setTimeout(function() {
+      const alerts = document.querySelectorAll('.alert');
+      alerts.forEach(function(alert) {
+        const bsAlert = new bootstrap.Alert(alert);
+        bsAlert.close();
+      });
+    }, 5000);
+
+    // Form submission enhancement
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.querySelector('form');
+      const submitBtn = form.querySelector('button[type="submit"]');
+      
+      form.addEventListener('submit', function() {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Updating...';
+      });
+    });
+  </script>
 {% endblock view %}
 
 

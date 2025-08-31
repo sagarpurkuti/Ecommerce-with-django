@@ -10,6 +10,9 @@ from django.contrib.auth.decorators import login_required
 
 @login_required(login_url='login')
 def AdminPanel(request):
+    return render(request, 'vendor/admin_base.html')
+
+def listProduct(request):
     query = request.GET.get('search')
     if query:
         products = Product.objects.filter(

@@ -2,7 +2,7 @@
 {% extends 'vendor/admin_base.html' %}
 
 {% block title %}
-Add Product
+Add Category
 {% endblock title %}
 
 {% block style %}
@@ -10,27 +10,401 @@ Add Product
     .form-label {
         margin-left: 3rem;  
     }
+    .form-control, .form-select {
+        border-radius: 0.5rem;
+        border: 1px solid #dee2e6;
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    .form-control:focus, .form-select:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+    .card {
+        border-radius: 1rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        border: 1px solid #dee2e6;
+    }
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        border-radius: 1rem 1rem 0 0 !important;
+        padding: 1.5rem;
+    }
+    .card-body {
+        padding: 2rem;
+    }
+    .btn {
+        border-radius: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    .btn-primary {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+    .btn-primary:hover {
+        background-color: #0b5ed7;
+        border-color: #0a58ca;
+        transform: translateY(-1px);
+    }
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+    .btn-secondary:hover {
+        background-color: #5c636a;
+        border-color: #565e64;
+        transform: translateY(-1px);
+    }
+    .form-floating {
+        margin-bottom: 1.5rem;
+    }
+    .form-floating > .form-control {
+        height: calc(3.5rem + 2px);
+        line-height: 1.25;
+    }
+    .form-floating > label {
+        padding: 1rem 0.75rem;
+    }
+    .category-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .help-text {
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-top: 0.25rem;
+    }
+    .error-message {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+    .success-preview {
+        background-color: #d1e7dd;
+        border: 1px solid #badbcc;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
 </style>
 {% endblock %}
 
-{% block view %}
-<section class="home">
-    <div class="text">Let's Add New Category</div>
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% for field in form %}
-            <div class="mb-3">
-                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                {{ field }}
-                {% if field.errors %}
-                    <div class="text-danger">{{ field.errors }}</div>
-                {% endif %}
-            </div>
-        {% endfor %}
-        <button type="submit" class="btn btn-primary w-100 mt-3 my-8 mx-8">Add Category</button>
-    </form>
+{% block data_breadcrumb %}
+{% endblock data_breadcrumb %}
 
-</section>
+{% block view %}
+  <!--start main wrapper-->
+  <main class="main-wrapper">
+    <div class="main-content">
+      <!--breadcrumb-->
+      <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+        <div class="breadcrumb-title pe-3">Categories</div>
+        <div class="ps-3">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 p-0">
+              <li class="breadcrumb-item"><a href="{% url 'admin_panel' %}"><i class="bx bx-home-alt"></i></a>
+              </li>
+              <li class="breadcrumb-item"><a href="{% url 'category_list' %}">Category Management</a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">Add Category</li>
+            </ol>
+          </nav>
+        </div>
+        <div class="ms-auto">
+          <div class="btn-group">
+            <a href="{% url 'category_list' %}" class="btn btn-secondary">
+              <i class="bi bi-arrow-left me-2"></i>Back to Categories
+            </a>
+          </div>
+        </div>
+      </div>
+      <!--end breadcrumb-->
+
+      <div class="row">
+        <div class="col-12 col-lg-8">
+          <!-- Add Category Form -->
+          <div class="card">
+            <div class="card-header">
+              <div class="d-flex align-items-center">
+                <div class="category-icon me-3">
+                  <i class="bi bi-plus-lg"></i>
+                </div>
+                <div>
+                  <h5 class="card-title mb-1">Add New Category</h5>
+                  <p class="text-muted mb-0">Create a new product category for your store</p>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <form method="POST" enctype="multipart/form-data" id="categoryForm">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                <div class="form-floating mb-4">
+                  {{ field }}
+                  <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                  {% if field.help_text %}
+                    <div class="help-text">{{ field.help_text }}</div>
+                  {% endif %}
+                  {% if field.errors %}
+                    <div class="error-message">
+                      {% for error in field.errors %}
+                        <i class="bi bi-exclamation-triangle me-1"></i>{{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+                {% endfor %}
+
+                <!-- Category Preview -->
+                <div class="success-preview d-none" id="categoryPreview">
+                  <h6 class="mb-2">
+                    <i class="bi bi-eye me-2"></i>Category Preview
+                  </h6>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <strong>Category Name:</strong>
+                      <span id="previewName"></span>
+                    </div>
+                    <div class="col-md-6">
+                      <strong>Slug:</strong>
+                      <span id="previewSlug" class="text-muted"></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex gap-3 mt-4">
+                  <button type="submit" class="btn btn-primary flex-fill">
+                    <i class="bi bi-plus-circle me-2"></i>Create Category
+                  </button>
+                  <a href="{% url 'category_list' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle me-2"></i>Cancel
+                  </a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+          <!-- Category Guidelines -->
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title mb-3">
+                <i class="bi bi-lightbulb me-2"></i>Category Guidelines
+              </h6>
+              <div class="d-flex flex-column gap-3">
+                <div class="d-flex align-items-start gap-2">
+                  <i class="bi bi-check-circle text-success mt-1"></i>
+                  <div>
+                    <small class="fw-semibold">Descriptive Names</small>
+                    <p class="mb-0 text-muted small">Use clear, descriptive names that customers will understand</p>
+                  </div>
+                </div>
+                <div class="d-flex align-items-start gap-2">
+                  <i class="bi bi-check-circle text-success mt-1"></i>
+                  <div>
+                    <small class="fw-semibold">URL-Friendly Slugs</small>
+                    <p class="mb-0 text-muted small">Slugs should be lowercase with hyphens, no spaces or special characters</p>
+                  </div>
+                </div>
+                <div class="d-flex align-items-start gap-2">
+                  <i class="bi bi-check-circle text-success mt-1"></i>
+                  <div>
+                    <small class="fw-semibold">Logical Organization</small>
+                    <p class="mb-0 text-muted small">Group related products together for better navigation</p>
+                  </div>
+                </div>
+                <div class="d-flex align-items-start gap-2">
+                  <i class="bi bi-check-circle text-success mt-1"></i>
+                  <div>
+                    <small class="fw-semibold">SEO Optimization</small>
+                    <p class="mb-0 text-muted small">Use keywords that customers search for</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title mb-3">Quick Actions</h6>
+              <div class="d-grid gap-2">
+                <a href="{% url 'category_list' %}" class="btn btn-outline-primary btn-sm">
+                  <i class="bi bi-list me-2"></i>View All Categories
+                </a>
+                <button class="btn btn-outline-success btn-sm" onclick="document.getElementById('categoryForm').reset()">
+                  <i class="bi bi-arrow-clockwise me-2"></i>Reset Form
+                </button>
+                <button class="btn btn-outline-info btn-sm" onclick="generateSlug()">
+                  <i class="bi bi-magic me-2"></i>Auto-Generate Slug
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category Examples -->
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title mb-3">
+                <i class="bi bi-collection me-2"></i>Category Examples
+              </h6>
+              <div class="d-flex flex-column gap-2">
+                <div class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
+                  <span class="small">Electronics</span>
+                  <span class="badge bg-primary small">electronics</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
+                  <span class="small">Home & Garden</span>
+                  <span class="badge bg-primary small">home-garden</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
+                  <span class="small">Fashion & Apparel</span>
+                  <span class="badge bg-primary small">fashion-apparel</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
+                  <span class="small">Sports & Outdoors</span>
+                  <span class="badge bg-primary small">sports-outdoors</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Tips -->
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title mb-3">
+                <i class="bi bi-info-circle me-2"></i>Form Tips
+              </h6>
+              <div class="d-flex flex-column gap-2">
+                <div class="d-flex align-items-start gap-2">
+                  <i class="bi bi-arrow-right text-primary mt-1"></i>
+                  <small>Category names are automatically converted to URL-friendly slugs</small>
+                </div>
+                <div class="d-flex align-items-start gap-2">
+                  <i class="bi bi-arrow-right text-primary mt-1"></i>
+                  <small>You can edit the slug manually if needed</small>
+                </div>
+                <div class="d-flex align-items-start gap-2">
+                  <i class="bi bi-arrow-right text-primary mt-1"></i>
+                  <small>Categories help organize your products for better customer experience</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!--end row-->
+    </div>
+  </main>
+  <!--end main wrapper-->
+
+  <!-- Success/Error Messages -->
+  {% if messages %}
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          <i class="bi bi-{% if message.tags == 'success' %}check-circle text-success{% elif message.tags == 'error' %}exclamation-triangle text-danger{% else %}info-circle text-info{% endif %} me-2"></i>
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <script>
+    // Auto-hide alerts after 5 seconds
+    setTimeout(function() {
+      const alerts = document.querySelectorAll('.alert');
+      alerts.forEach(function(alert) {
+        const bsAlert = new bootstrap.Alert(alert);
+        bsAlert.close();
+      });
+    }, 5000);
+
+    // Auto-generate slug from category name
+    function generateSlug() {
+      const nameField = document.querySelector('input[name="category_name"]');
+      const slugField = document.querySelector('input[name="slug"]');
+      
+      if (nameField && slugField) {
+        const name = nameField.value;
+        const slug = name.toLowerCase()
+          .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+          .replace(/\s+/g, '-') // Replace spaces with hyphens
+          .replace(/-+/g, '-') // Replace multiple hyphens with single
+          .trim('-'); // Remove leading/trailing hyphens
+        
+        slugField.value = slug;
+        updatePreview();
+      }
+    }
+
+    // Update preview when form fields change
+    function updatePreview() {
+      const nameField = document.querySelector('input[name="category_name"]');
+      const slugField = document.querySelector('input[name="slug"]');
+      const preview = document.getElementById('categoryPreview');
+      const previewName = document.getElementById('previewName');
+      const previewSlug = document.getElementById('previewSlug');
+      
+      if (nameField && slugField && preview && previewName && previewSlug) {
+        const name = nameField.value.trim();
+        const slug = slugField.value.trim();
+        
+        if (name || slug) {
+          previewName.textContent = name || 'Category Name';
+          previewSlug.textContent = slug || 'category-slug';
+          preview.classList.remove('d-none');
+        } else {
+          preview.classList.add('d-none');
+        }
+      }
+    }
+
+    // Add event listeners for real-time preview
+    document.addEventListener('DOMContentLoaded', function() {
+      const nameField = document.querySelector('input[name="category_name"]');
+      const slugField = document.querySelector('input[name="slug"]');
+      
+      if (nameField) {
+        nameField.addEventListener('input', updatePreview);
+      }
+      if (slugField) {
+        slugField.addEventListener('input', updatePreview);
+      }
+      
+      // Initial preview update
+      updatePreview();
+    });
+
+    // Form submission loading state
+    document.getElementById('categoryForm').addEventListener('submit', function() {
+      const submitBtn = this.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
+      
+      submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Creating...';
+      submitBtn.disabled = true;
+      
+      // Re-enable after 5 seconds in case of error
+      setTimeout(function() {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+      }, 5000);
+    });
+  </script>
 {% endblock view %}
 
 
